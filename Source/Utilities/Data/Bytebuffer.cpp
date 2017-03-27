@@ -245,3 +245,20 @@ ARRAY_TEMPLATE(int64_t, BB_SINT8);
 ARRAY_TEMPLATE(uint64_t, BB_UINT8);
 ARRAY_TEMPLATE(float, BB_FLOAT32);
 ARRAY_TEMPLATE(double, BB_FLOAT64);
+
+// Ease serialization by appending buffers.
+Bytebuffer &Bytebuffer::operator = (Bytebuffer Right)
+{
+    this->Clear();
+    return *this + Right;
+}
+Bytebuffer &Bytebuffer::operator + (Bytebuffer Right)
+{
+    this->RawWrite(Right.Size(), Right.Data());
+    return *this;
+}
+Bytebuffer &Bytebuffer::operator += (Bytebuffer Right)
+{
+    this->RawWrite(Right.Size(), Right.Data());
+    return *this;
+}

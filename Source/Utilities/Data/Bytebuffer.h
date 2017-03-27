@@ -72,4 +72,9 @@ public:
     bool WriteWString(std::wstring *Buffer, bool Typechecked = true);
     template <typename Type> bool ReadArray(std::vector<Type> &Data);
     template <typename Type> bool WriteArray(std::vector<Type> *Data);
+
+    // Ease serialization by appending buffers.
+    Bytebuffer &operator = (Bytebuffer);
+    Bytebuffer &operator + (Bytebuffer);
+    Bytebuffer &operator += (Bytebuffer);
 };
