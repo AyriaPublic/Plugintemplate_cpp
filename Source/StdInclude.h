@@ -14,6 +14,7 @@
 // Includes for the utilities.
 #include "Utilities/Text/Variadicstring.h"
 #include "Utilities/Binary/Memprotect.h"
+#include "Utilities/Data/Bytebuffer.h"
 #include "Utilities/Text/Logfile.h"
 #include "Utilities/Crypto/FNV1.h"
 
