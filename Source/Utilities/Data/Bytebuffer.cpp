@@ -226,14 +226,14 @@ template <> bool Bytebuffer::ReadArray(std::vector<Type> &Data)             \
 }                                                                           \
 template <> bool Bytebuffer::WriteArray(std::vector<Type> *Data)            \
 {                                                                           \
-    Write(Enum + 100, false);                                               \
+    Write(uint8_t(Enum + 100), false);                                      \
     Write(uint32_t(Data->size()));                                          \
                                                                             \
-    for (auto Item : *Data) Write(*Item, false);                             \
+    for (auto &Item : *Data) Write(Item, false);                            \
     return true;                                                            \
 }                                                                           \
 
-ARRAY_TEMPLATE(bool, BB_BOOL);
+//ARRAY_TEMPLATE(bool, BB_BOOL);
 ARRAY_TEMPLATE(char, BB_SINT8);
 ARRAY_TEMPLATE(int8_t, BB_SINT8);
 ARRAY_TEMPLATE(uint8_t, BB_UINT8);
@@ -245,5 +245,3 @@ ARRAY_TEMPLATE(int64_t, BB_SINT8);
 ARRAY_TEMPLATE(uint64_t, BB_UINT8);
 ARRAY_TEMPLATE(float, BB_FLOAT32);
 ARRAY_TEMPLATE(double, BB_FLOAT64);
-
-
