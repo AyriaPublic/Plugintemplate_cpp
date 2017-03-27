@@ -45,3 +45,7 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+/.vs/Plugintemplate_cpp/v15
+/Bin
+*.filters
+*.user
