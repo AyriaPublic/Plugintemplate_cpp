@@ -75,7 +75,7 @@ public:
     template <typename Type> bool WriteArray(std::vector<Type> *Data);
 
     // Ease serialization by appending buffers.
-    Bytebuffer &operator = (Bytebuffer);
+    Bytebuffer &operator = (Bytebuffer&);
     Bytebuffer &operator + (Bytebuffer);
     Bytebuffer &operator += (Bytebuffer);
 };

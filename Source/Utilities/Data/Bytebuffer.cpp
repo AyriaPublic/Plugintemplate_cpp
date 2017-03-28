@@ -249,7 +249,7 @@ ARRAY_TEMPLATE(float, BB_FLOAT32);
 ARRAY_TEMPLATE(double, BB_FLOAT64);
 
 // Ease serialization by appending buffers.
-Bytebuffer &Bytebuffer::operator = (Bytebuffer Right)
+Bytebuffer &Bytebuffer::operator = (Bytebuffer &Right)
 {
     this->Clear();
     return *this + Right;
