@@ -12,9 +12,9 @@
 #define DebugPrint(string)
 #else
 #define PrintFunction() Log(__FUNCTION__, "Call to")
-#define DebugPrint(string) LogPrefix(string, "Debug")
+#define DebugPrint(string) LogPrefix(string, "  Debug")
 #endif
 
 // General information.
-#define InfoPrint(string) LogPrefix(string, "Info")
+#define InfoPrint(string) LogPrefix(string, "  Info")
 #define VAPrint(format, ...) Log(va(format, __VA_ARGS__))
