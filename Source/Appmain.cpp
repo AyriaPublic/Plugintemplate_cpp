@@ -14,6 +14,10 @@ extern "C"
 {
     EXPORT_ATTR void __cdecl onInitializationStart(bool Reserved)
     {
+        static bool Initialized = false;
+        if (Initialized) return;
+        else Initialized = true;
+        
         /*
             Usage:
             ----------------------------------------------------------------------
@@ -24,6 +28,10 @@ extern "C"
     }
     EXPORT_ATTR void __cdecl onInitializationDone(bool Reserved)
     {
+        static bool Initialized = false;
+        if (Initialized) return;
+        else Initialized = true;
+        
         /*
             Usage:
             ----------------------------------------------------------------------
