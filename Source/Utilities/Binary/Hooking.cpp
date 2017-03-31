@@ -4,6 +4,11 @@
     License: MIT
 */
 
+// Defines for the environment.
+#if __has_include("../../StdInclude.h")
+#include "../../StdInclude.h"
+#endif
+
 #include "Hooking.h"
 
 // Memory protection may be needed.
