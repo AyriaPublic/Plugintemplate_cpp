@@ -201,9 +201,9 @@ bool Bytebuffer::ReadWString(std::wstring &Buffer, bool Typechecked)
 {
     if (!Typechecked || ReadDatatype(BB_STRING_UNICODE))
     {
-        size_t Stringlength = std::wcslen((const wchar_t *)Internalstorage.data() + Storageiterator) + 1;
-        Buffer.append((const wchar_t *)Internalstorage.data() + Storageiterator);
-        return SetPosition(Position() + Stringlength * sizeof(wchar_t));
+        size_t Stringlength = std::wcslen((wchar_t *)(Internalstorage.data() + Storageiterator));
+        Buffer.append((wchar_t *)(Internalstorage.data() + Storageiterator));
+        return SetPosition(Position() + Stringlength * sizeof(wchar_t) + 1);
     }
     return false;
 }
