@@ -11,7 +11,7 @@
 #define PrintFunction()
 #define DebugPrint(string)
 #else
-#define PrintFunction() Log(__FUNCTION__, "Call to")
+#define PrintFunction() LogPrefix(__FUNCTION__, "Call to")
 #define DebugPrint(string) LogPrefix(string, "  Debug")
 #endif
 
