@@ -37,7 +37,7 @@
 #endif
 
 // Logging functions save to dir and duplicate to stdout.
-#define LOGFILEDIR "./Plugins/Log/"
+#define LOGFILEDIR "./Plugins/Logs/"
 #ifndef NDEBUG
 #define DEBUGTOSTREAM
 #endif
