@@ -8,18 +8,12 @@
 #include <cstdio>
 #include <ctime>
 #include <mutex>
+#include "Variadicstring.h"
 
 // Configuration defines.
 #if !defined(LOGFILEDIR) || !defined(MODULENAME)
 #define LOGFILEDIR "./"
 #define MODULENAME "plugin"
-#endif
-
-// Variadic string support, should never be a problem.
-#if __has_include("Variadicstring.h")
-#include "Variadicstring.h"
-#else
-std::string va(const char *Format, ...) { return Format; };
 #endif
 
 // Full path to our logfile.

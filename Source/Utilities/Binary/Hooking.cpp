@@ -4,20 +4,9 @@
     License: MIT
 */
 
-// Defines for the environment.
-#if __has_include("../../StdInclude.h")
 #include "../../StdInclude.h"
-#endif
-
-#include "Hooking.h"
-
-// Memory protection may be needed.
-#if __has_include("Memprotect.h")
 #include "Memprotect.h"
-#else
-void Memprotect::Protectrange(void *Address, const size_t Length, unsigned long Oldprotect) {}
-unsigned long Memprotect::Unprotectrange(void *Address, const size_t Length) { return 0; }
-#endif
+#include "Hooking.h"
 
 // Restore the memory where the hook was placed.
 bool Hooking::Stomphook::Removehook()
