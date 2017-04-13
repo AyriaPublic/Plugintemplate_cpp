@@ -11,14 +11,14 @@
 namespace Hooking
 {
     #define EXTENDEDHOOKDECL(Basehook)                                  \
-    template <typename Signature, typename ...Arguments>                \
+    template <typename Signature, typename>                             \
     struct Basehook ##Ex : public Basehook                              \
     {                                                                   \
         std::function<Signature> Function;                              \
         virtual bool Installhook(void *Location, void *Target) override \
         {                                                               \
             Function = *(Signature *)Location;                          \
-            Basehook::Installhook(Location, Target);                    \
+            return Basehook::Installhook(Location, Target);             \
         }                                                               \
     }                                                                   \
     
