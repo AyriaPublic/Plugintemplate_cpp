@@ -54,7 +54,7 @@ extern "C"
         // MessageID is a FNV1a_32 hash of a string.
         switch (MessageID)
         {
-            case Compiletimehash::FNV1a_32("MyPlugin_Default"):
+            case Compiletimehash::FNV1a_32(MODULENAME "_Default"):
             default: break;
         }
     }
