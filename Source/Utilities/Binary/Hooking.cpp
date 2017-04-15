@@ -44,7 +44,7 @@ bool Hooking::Stomphook::Installhook(void *Location, void *Target)
         *(uint8_t *)(uint64_t(Savedlocation) + 1) = 0xB8;
         *(uint64_t *)(uint64_t(Savedlocation) + 2) = uint64_t(Target);
         *(uint8_t *)(uint64_t(Savedlocation) + 10) = 0xFF;
-        *(uint8_t *)(uint64_t(Savedlocation) + 11) = 0xD0;
+        *(uint8_t *)(uint64_t(Savedlocation) + 11) = 0xE0;
     }
     Memprotect::Protectrange(Savedlocation, 20, Protection);
 
@@ -63,7 +63,7 @@ bool Hooking::Callhook::Installhook(void *Location, void *Target)
         *(uint8_t *)(uint64_t(Savedlocation) + 1) = 0xB8;
         *(uint64_t *)(uint64_t(Savedlocation) + 2) = uint64_t(Target);
         *(uint8_t *)(uint64_t(Savedlocation) + 10) = 0xFF;
-        *(uint8_t *)(uint64_t(Savedlocation) + 11) = 0xE0;
+        *(uint8_t *)(uint64_t(Savedlocation) + 11) = 0xD0;
     }
     Memprotect::Protectrange(Savedlocation, 20, Protection);
 
