@@ -7,17 +7,18 @@
 #pragma once
 #include <cstdint>
 #include <functional>
+#include <mutex>
 
 namespace Hooking
 {
     #define EXTENDEDHOOKDECL(Basehook)                                  \
-    template <typename Signature, typename>                             \
+    template <typename Signature>                                       \
     struct Basehook ##Ex : public Basehook                              \
     {                                                                   \
-        std::function<Signature> Function;                              \
+        std::pair<std::mutex, std::function<Signature>> Function;       \
         virtual bool Installhook(void *Location, void *Target) override \
         {                                                               \
-            Function = *(Signature *)Location;                          \
+            Function.second = *(Signature *)Location;                   \
             return Basehook::Installhook(Location, Target);             \
         }                                                               \
     }                                                                   \
