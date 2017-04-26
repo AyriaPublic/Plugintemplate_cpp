@@ -22,7 +22,7 @@ namespace Hooking
             return Basehook::Installhook(Location, Target);             \
         }                                                               \
     }                                                                   \
-    
+
     // Basic interface for hooks.
     struct IHook
     {

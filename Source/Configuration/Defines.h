@@ -7,7 +7,7 @@
 #pragma once
 
 // As Visual Studio 2015 no longer defines NDEBUG, we'll have to.
-#if !defined(_DEBUG) && !defined(NDEBUG) 
+#if !defined(_DEBUG) && !defined(NDEBUG)
 #define NDEBUG
 #endif
 

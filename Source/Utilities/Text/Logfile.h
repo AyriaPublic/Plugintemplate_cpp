@@ -57,7 +57,7 @@ inline void LogTimestamp(const char *Message)
 {
     auto Now = std::time(NULL);
     char Buffer[80]{};
-    
+
     std::strftime(Buffer, 80, "%H:%M:%S", std::localtime(&Now));
     return LogPrefix(Message, Buffer);
 }

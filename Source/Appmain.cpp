@@ -17,7 +17,7 @@ extern "C"
         static bool Initialized = false;
         if (Initialized) return;
         else Initialized = true;
-        
+
         /*
             Usage:
             ----------------------------------------------------------------------
@@ -31,7 +31,7 @@ extern "C"
         static bool Initialized = false;
         if (Initialized) return;
         else Initialized = true;
-        
+
         /*
             Usage:
             ----------------------------------------------------------------------
