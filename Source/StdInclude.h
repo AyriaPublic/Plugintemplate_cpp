@@ -13,6 +13,7 @@
 
 // Includes for the utilities.
 #include "Utilities/Text/Variadicstring.h"
+#include "Utilities/Binary/Patternscan.h"
 #include "Utilities/Binary/Memprotect.h"
 #include "Utilities/Data/Bytebuffer.h"
 #include "Utilities/Binary/Hooking.h"
