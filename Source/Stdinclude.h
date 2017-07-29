@@ -15,12 +15,16 @@
 #include <cstdlib>
 #include <cstdarg>
 #include <cstring>
+#include <cstdio>
+#include <memory>
+#include <mutex>
 
 // Includes for thirdparty libraries.
 /* ... */
 
 // Includes for our utilities.
-/* ... */
+#include "Utility/Text/Variadicstring.h"
+#include "Utility/Text/Logfile.h"
 
 // Includes for our components.
 /* ... */

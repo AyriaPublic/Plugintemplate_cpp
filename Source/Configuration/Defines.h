@@ -33,7 +33,7 @@
 #endif
 
 // Logging functions save to this directory.
-#define LOGFILEDIR "./"
+#define LOGFILEDIR "./Plugins/Logs/"
 
 // The name that will be used in default functions.
 #define MODULENAME "Plugintemplate_cpp"
