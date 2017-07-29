@@ -9,6 +9,10 @@
 
 #include "../../Stdinclude.h"
 
+#if !defined (_WIN32)
+extern char _etext, _end, __executable_start;
+#endif
+
 namespace Internal
 {
     std::pair<size_t, size_t> Coderange;
@@ -36,12 +40,9 @@ namespace Internal
     };
 
 #else
-
-    extern char _etext, _end, __executable_start;
-
+    
     struct Rangeinitializer
     {
-
         Rangeinitializer()
         {
             /*
