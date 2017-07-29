@@ -199,7 +199,7 @@ const uint8_t *Bytebuffer::Data()
 }
 const uint8_t Bytebuffer::Peek()
 {
-    uint8_t Byte = -1;
+    uint8_t Byte = uint8_t(-1);
 
     // Read the single byte.
     if (Rawread(sizeof(uint8_t), &Byte))
