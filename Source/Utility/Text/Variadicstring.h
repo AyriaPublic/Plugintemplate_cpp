@@ -8,7 +8,6 @@
 
 #pragma once
 #include "../../Stdinclude.h"
-#define VA_AVAILABLE
 
 inline std::string va(std::string Format, ...)
 {

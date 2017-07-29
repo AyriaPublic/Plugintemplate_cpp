@@ -9,6 +9,7 @@
 
 // Includes for configuration settings.
 #include "Configuration/Defines.h"
+#include "Configuration/Macros.h"
 
 // Includes for standard libraries.
 #include <cstdint>

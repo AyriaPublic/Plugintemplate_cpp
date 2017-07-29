@@ -47,7 +47,6 @@ inline void Logprint(std::string Message)
 }
 
 // Write a prefixed string.
-#if defined (VA_AVAILABLE)
 inline void Logprefixed(std::string Message, std::string Prefix)
 {
     Logprint(va("[%-8s] %s", Prefix.c_str(), Message.c_str()));
@@ -60,7 +59,6 @@ inline void Logtimestamped(std::string Message)
     std::strftime(Buffer, 80, "%H:%M:%S", std::localtime(&Now));
     Logprefixed(Message, Buffer);
 }
-#endif
 
 // Delete the log and create a new one on startup.
 namespace
