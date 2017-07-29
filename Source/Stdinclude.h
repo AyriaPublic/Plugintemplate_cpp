@@ -27,6 +27,7 @@
 // Includes for our utilities.
 #include "Utility/Cryptography/FNV1Hash.h"
 #include "Utility/Text/Variadicstring.h"
+#include "Utility/Binary/Patternscan.h"
 #include "Utility/Binary/Memprotect.h"
 #include "Utility/Data/Bytebuffer.h"
 #include "Utility/Binary/Hooking.h"
