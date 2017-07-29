@@ -27,6 +27,7 @@
 #include "Utility/Cryptography/FNV1Hash.h"
 #include "Utility/Text/Variadicstring.h"
 #include "Utility/Text/Logfile.h"
+#include "Utility/Data/Base64.h"
 
 // Includes for our components.
 /* ... */
