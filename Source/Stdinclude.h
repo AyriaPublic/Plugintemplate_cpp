@@ -17,6 +17,7 @@
 #include <cstdarg>
 #include <cstring>
 #include <cstdio>
+#include <vector>
 #include <memory>
 #include <mutex>
 
@@ -26,6 +27,7 @@
 // Includes for our utilities.
 #include "Utility/Cryptography/FNV1Hash.h"
 #include "Utility/Text/Variadicstring.h"
+#include "Utility/Data/Bytebuffer.h"
 #include "Utility/Text/Logfile.h"
 #include "Utility/Data/Base64.h"
 
