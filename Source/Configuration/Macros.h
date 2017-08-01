@@ -1,20 +1,22 @@
 /*
-    Initial author: Convery
-    Started: 2017-03-27
+    Initial author: Convery (tcn@ayria.se)
+    Started: 29-07-2017
     License: MIT
+    Notes:
+        Preprocessor macros for the module.
 */
 
 #pragma once
 
-// Debug information.
-#ifdef NDEBUG
-#define PrintFunction()
-#define DebugPrint(string)
+// Debug information logging.
+#if defined (NDEBUG)
+    #define Printfunction()
+    #define Debugprint(string)
 #else
-#define PrintFunction() LogPrefix(__FUNCTION__, "Call to")
-#define DebugPrint(string) LogPrefix(string, "  Debug")
+    #define Printfunction() Logprefixed(__FUNCTION__, "Call to")
+    #define Debugprint(string) Logprefixed(string, "  Debug")
 #endif
 
 // General information.
-#define InfoPrint(string) LogPrefix(string, "  Info")
-#define VAPrint(format, ...) Log(va(format, __VA_ARGS__))
+#define Infoprint(string) Logprefixed(string, "  Info")
+#define vaprint(format, ...) Logprint(va(format, __VA_ARGS__))

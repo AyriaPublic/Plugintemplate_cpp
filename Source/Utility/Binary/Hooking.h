@@ -1,13 +1,14 @@
 /*
-    Initial author: Convery
-    Started: 2017-03-28
+    Initial author: Convery (tcn@ayria.se)
+    Started: 29-07-2017
     License: MIT
+    Notes:
+        A hook allows your plugin to take control over the game.
+        It may replace a function in the game with your own.
 */
 
 #pragma once
-#include <cstdint>
-#include <functional>
-#include <mutex>
+#include "../../Stdinclude.h"
 
 namespace Hooking
 {

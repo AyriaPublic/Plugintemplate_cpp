@@ -1,19 +1,25 @@
 /*
-    Initial author: Convery
-    Started: 2017-4-28
+    Initial author: Convery (tcn@ayria.se)
+    Started: 29-07-2017
     License: MIT
+    Notes:
+        Scans through the hosts memory to find a pattern.
+        We recommend to use the formatted version.
 */
 
-#include "Patternscan.h"
-#include "../Text/Variadicstring.h"
+#include "../../Stdinclude.h"
 
-std::pair<size_t, size_t> Coderange;
-std::pair<size_t, size_t> Datarange;
+#if !defined (_WIN32)
+extern char _etext, _end, __executable_start;
+#endif
 
-namespace
+namespace Internal
 {
-#ifdef _WIN32
-#include <Windows.h>
+    std::pair<size_t, size_t> Coderange;
+    std::pair<size_t, size_t> Datarange;
+
+    #if defined (_WIN32)
+    #include <Windows.h>
 
     struct Rangeinitializer
     {
@@ -32,19 +38,38 @@ namespace
             Datarange.second = Datarange.first + NTHeader->OptionalHeader.SizeOfInitializedData;
         }
     };
+
 #else
+    
     struct Rangeinitializer
     {
         Rangeinitializer()
         {
-            /* TODO(Convery): Nix stuff here. */
+            /*
+                NOTE(Convery):
+                This code is for linux, OSX may not support it.
+                If it fails under OSX, try this:
+
+                #include <mach-o/getsect.h>
+
+                Coderange.first = size_t(???);
+                Coderange.second = size_t(get_etext());
+
+                Datarange.first = size_t(get_etext());
+                Datarange.second = size_t(get_end());
+            */
+
+            Coderange.first = size_t(&__executable_start);
+            Coderange.second = size_t(&_etext);
+            Datarange.first = size_t(&_etext);
+            Datarange.second = size_t(&_end);
         }
     };
 #endif
 
-    Rangeinitializer Initializer{};
+    static Rangeinitializer Initializer{};
 }
-uint32_t Longest = 0;
+
 namespace Patternscan
 {
     // Formatting, e.g. "00 04 EB 84 ? ? 32"
@@ -67,7 +92,7 @@ namespace Patternscan
             }
 
             // Grab two bytes from the input.
-            Result.first.append(1, char(strtoul(Iterator, nullptr, 16)));
+            Result.first.append(1, char(strtoul(std::string(Iterator, 2).c_str(), nullptr, 16)));
             Result.second.append(1, '\x01');
             Iterator++;
         }
@@ -99,7 +124,6 @@ namespace Patternscan
     size_t Find(Pattern Input, size_t Rangestart, size_t Rangeend)
     {
         uint8_t Firstbyte = Input.first[0];
-
 
         // We do not handle masks that start with an invalid byte.
         if (Input.second[0] == '\x00') return 0;
@@ -149,18 +173,18 @@ namespace Patternscan
     // Built-in ranges for the application.
     size_t FindCode(Pattern Input)
     {
-        return Find(Input, Coderange.first, Coderange.second);
+        return Find(Input, Internal::Coderange.first, Internal::Coderange.second);
     }
     size_t FindData(Pattern Input)
     {
-        return Find(Input, Datarange.first, Datarange.second);
+        return Find(Input, Internal::Datarange.first, Internal::Datarange.second);
     }
     std::vector<size_t> FindallCode(Pattern Input)
     {
-        return Findall(Input, Coderange.first, Coderange.second);
+        return Findall(Input, Internal::Coderange.first, Internal::Coderange.second);
     }
     std::vector<size_t> FindallData(Pattern Input)
     {
-        return Findall(Input, Datarange.first, Datarange.second);
+        return Findall(Input, Internal::Datarange.first, Internal::Datarange.second);
     }
 }

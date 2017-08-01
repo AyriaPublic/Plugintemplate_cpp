@@ -1,12 +1,13 @@
 /*
-    Initial author: Convery
-    Started: 2017-03-28
+    Initial author: Convery (tcn@ayria.se)
+    Started: 29-07-2017
     License: MIT
+    Notes:
+        A hook allows your plugin to take control over the game.
+        It may replace a function in the game with your own.
 */
 
-#include "../../StdInclude.h"
-#include "Memprotect.h"
-#include "Hooking.h"
+#include "../../Stdinclude.h"
 
 // Restore the memory where the hook was placed.
 bool Hooking::Stomphook::Removehook()
@@ -30,7 +31,8 @@ bool Hooking::Callhook::Removehook()
     return true;
 }
 
-#ifdef ENVIRONMENT64
+// Overwrite the games code with a redirection.
+#if defined (ENVIRONMENT64)
 bool Hooking::Stomphook::Installhook(void *Location, void *Target)
 {
     Savedlocation = Location;
@@ -69,7 +71,9 @@ bool Hooking::Callhook::Installhook(void *Location, void *Target)
 
     return true;
 }
+
 #else
+
 bool Hooking::Stomphook::Installhook(void *Location, void *Target)
 {
     Savedlocation = Location;

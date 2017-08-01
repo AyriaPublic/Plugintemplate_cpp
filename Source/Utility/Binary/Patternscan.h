@@ -1,13 +1,14 @@
 /*
-    Initial author: Convery
-    Started: 2017-4-28
+    Initial author: Convery (tcn@ayria.se)
+    Started: 29-07-2017
     License: MIT
+    Notes:
+        Scans through the hosts memory to find a pattern.
+        We recommend to use the formatted version.
 */
 
 #pragma once
-#include <cstdint>
-#include <string>
-#include <vector>
+#include "../../Stdinclude.h"
 
 namespace Patternscan
 {
