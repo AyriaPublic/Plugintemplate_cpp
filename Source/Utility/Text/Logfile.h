@@ -60,16 +60,9 @@ inline void Logtimestamped(std::string Message)
     Logprefixed(Message, Buffer);
 }
 
-// Delete the log and create a new one on startup.
-namespace
+// Delete the log and create a new one.
+inline void Clearlog()
 {
-    struct Deletelog
-    {
-        Deletelog()
-        {
-            std::remove(Logfileinternal::Outputpath);
-            Logtimestamped("Starting up..");
-        }
-    };
-    static Deletelog Deleted{};
+    std::remove(Logfileinternal::Outputpath);
+    Logtimestamped("Starting up..");
 }

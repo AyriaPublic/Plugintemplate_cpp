@@ -8,6 +8,9 @@
 
 #include "Stdinclude.h"
 
+// Delete the last sessions log on startup.
+namespace { struct Deletelog { Deletelog() { Clearlog(); } }; static Deletelog Deleted{}; }
+
 // The callback system for Ayria plugins.
 extern "C"
 {
