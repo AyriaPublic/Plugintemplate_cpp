@@ -12,3 +12,6 @@ add_library(Plugintemplate64 SHARED ${SOURCES})
 
 set_target_properties(Plugintemplate32 PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
 set_target_properties(Plugintemplate64 PROPERTIES COMPILE_FLAGS "-m64" LINK_FLAGS "-m64")
+set_target_properties(Plugintemplate32 Plugintemplate64 PROPERTIES PREFIX "")
+set_target_properties(Plugintemplate32 PROPERTIES SUFFIX "Ayria32")
+set_target_properties(Plugintemplate64 PROPERTIES SUFFIX "Ayria64")
