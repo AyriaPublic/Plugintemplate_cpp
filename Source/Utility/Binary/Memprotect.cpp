@@ -44,7 +44,7 @@ unsigned long Memprotect::Unprotectrange(void *Address, const size_t Length)
 
         while(std::fgets(Buffer, 1024, Filehandle))
         {
-            std::scanf("%lx-%lx %4s %lx %5s %ld %s", &Start, &End, Permissions, &Foo, Device, &Node, Mapname);
+            std::sscanf(Buffer, "%lx-%lx %4s %lx %5s %ld %s", &Start, &End, Permissions, &Foo, Device, &Node, Mapname);
 
             if(Start <= (unsigned long)Address || End >= (unsigned long)Address)
             {
