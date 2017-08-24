@@ -144,7 +144,7 @@
     <ClInclude Include="Source\Configuration\Defines.h" />
     <ClInclude Include="Source\Configuration\Macros.h" />
     <ClInclude Include="Source\Configuration\Warnings.h" />
-    <ClInclude Include="Source\StdInclude.h" />
+    <ClInclude Include="Source\Stdinclude.h" />
     <ClInclude Include="Source\Utility\Binary\Hooking.h" />
     <ClInclude Include="Source\Utility\Binary\Memprotect.h" />
     <ClInclude Include="Source\Utility\Binary\Patternscan.h" />
