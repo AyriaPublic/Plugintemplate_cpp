@@ -23,6 +23,20 @@
 #include <mutex>
 #include <ctime>
 
+// Includes for platform libraries.
+#if defined (_WIN32)
+#include <Windows.h>
+#include <direct.h>
+#undef min
+#undef max
+#else
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <dirent.h>
+#include <unistd.h>
+#endif
+
 // Includes for thirdparty libraries.
 /* ... */
 
@@ -33,6 +47,7 @@
 #include "Utility/Binary/Memprotect.h"
 #include "Utility/Data/Bytebuffer.h"
 #include "Utility/Binary/Hooking.h"
+#include "Utility/Data/SystemIO.h"
 #include "Utility/Text/Logfile.h"
 #include "Utility/Data/Base64.h"
 

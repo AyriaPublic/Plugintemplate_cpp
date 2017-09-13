@@ -8,8 +8,10 @@
 
 #include "Stdinclude.h"
 
-// Delete the last sessions log on startup.
-namespace { struct Deletelog { Deletelog() { Clearlog(); } }; static Deletelog Deleted{}; }
+// Delete the last sessions log on startup for windows.
+#if defined (_WIN32)
+    namespace { struct Deletelog { Deletelog() { Clearlog(); } }; static Deletelog Deleted{}; }
+#endif
 
 // The callback system for Ayria plugins.
 extern "C"
@@ -58,7 +60,6 @@ extern "C"
 
 // Default entrypoint for windows.
 #ifdef _WIN32
-#include <Windows.h>
 BOOLEAN WINAPI DllMain(HINSTANCE hDllHandle, DWORD nReason, LPVOID Reserved)
 {
     switch (nReason)
