@@ -59,7 +59,7 @@ extern "C"
 }
 
 // Default entrypoint for windows.
-#ifdef _WIN32
+#if defined (_WIN32)
 BOOLEAN WINAPI DllMain(HINSTANCE hDllHandle, DWORD nReason, LPVOID Reserved)
 {
     switch (nReason)
