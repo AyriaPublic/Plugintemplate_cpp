@@ -12,6 +12,27 @@
 
 namespace Package
 {
+    bool Findfiles(std::string Criteria, std::vector<std::string> *Filenames)
+    {
+        // Workaround for dev-plugins not having the file.
+        if (!Fileexists("./Plugins/" MODULENAME ".LNModule"))
+        {
+            miniz_cpp::zip_file Archive;
+            Archive.save("./Plugins/" MODULENAME ".LNModule");
+            return false;
+        }
+
+        // List all files.
+        miniz_cpp::zip_file Archive("./Plugins/" MODULENAME ".LNModule");
+        auto Filelist = Archive.namelist();
+
+        // Enqueue the files matching the extension.
+        for (auto &Item : Filelist)
+            if (std::strstr(Item.c_str(), Criteria.c_str()))
+                Filenames->push_back(Item);
+
+        return Filenames->size() > 0;
+    }
     void Write(std::string Filename, std::string &Buffer)
     {
         // Workaround for dev-plugins not having the file.
