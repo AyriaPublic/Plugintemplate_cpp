@@ -12,6 +12,7 @@
 
 namespace Package
 {
+    bool Findfiles(std::string Criteria, std::vector<std::string> *Filenames);
     void Write(std::string Filename, std::string &Buffer);
     std::string Read(std::string Filename);
     bool Exists(std::string Filename);
