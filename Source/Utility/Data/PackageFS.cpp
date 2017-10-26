@@ -15,15 +15,15 @@ namespace Package
     bool Findfiles(std::string Criteria, std::vector<std::string> *Filenames)
     {
         // Workaround for dev-plugins not having the file.
-        if (!Fileexists("./Plugins/" MODULENAME ".LNModule"))
+        if (!Fileexists("./Plugins/" MODULENAME ".Ayria"))
         {
             miniz_cpp::zip_file Archive;
-            Archive.save("./Plugins/" MODULENAME ".LNModule");
+            Archive.save("./Plugins/" MODULENAME ".Ayria");
             return false;
         }
 
         // List all files.
-        miniz_cpp::zip_file Archive("./Plugins/" MODULENAME ".LNModule");
+        miniz_cpp::zip_file Archive("./Plugins/" MODULENAME ".Ayria");
         auto Filelist = Archive.namelist();
 
         // Enqueue the files matching the extension.
