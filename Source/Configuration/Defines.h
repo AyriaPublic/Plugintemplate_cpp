@@ -37,6 +37,7 @@
 
 // The name that will be used in default functions.
 #define MODULENAME "Plugintemplate_cpp"
+#define MODULEEXTENSION "Ayria"
 
 // Disable windows annoyance.
 #if defined (_WIN32)

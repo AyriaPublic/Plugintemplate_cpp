@@ -1,7 +1,7 @@
 /*
     Initial author: Convery (tcn@ayria.se)
     Started: 15-10-2017
-    License: MIT
+    License: Closedsource
     Notes:
         Plugins keep their files in their archive.
         Initial test version, horribly inefficient.
@@ -12,19 +12,77 @@
 
 namespace Package
 {
+    // Ensure that the names are defined.
+    #if !defined (MODULENAME)
+        #define MODULENAME "Invalid"
+    #endif
+    #if !defined (MODULEEXTENSION)
+        #define MODULEEXTENSION "Invalid"
+    #endif
+
+    // Operations on the default archive.
+    std::string Read(std::string Filename)
+    {
+        auto Handle = Loadarchive("./Plugins/" MODULENAME "." MODULEEXTENSION);
+        return Read(Handle, Filename);
+    }
+    void Write(std::string Filename, std::string &Buffer)
+    {
+        auto Handle = Loadarchive("./Plugins/" MODULENAME "." MODULEEXTENSION);
+        return Write(Handle, Filename, Buffer);
+    }
     bool Findfiles(std::string Criteria, std::vector<std::string> *Filenames)
     {
+        auto Handle = Loadarchive("./Plugins/" MODULENAME "." MODULEEXTENSION);
+        return Findfiles(Handle, Criteria, Filenames);
+    }
+    bool Exists(std::string Filename)
+    {
+        auto Handle = Loadarchive("./Plugins/" MODULENAME "." MODULEEXTENSION);
+        return Exists(Handle, Filename);
+    }
+    void Delete(std::string Filename)
+    {
+        auto Handle = Loadarchive("./Plugins/" MODULENAME "." MODULEEXTENSION);
+        return Delete(Handle, Filename);
+    }
+
+    // Operations on a specific archive.
+    Archivehandle Loadarchive(std::string Filename)
+    {
         // Workaround for dev-plugins not having the file.
-        if (!Fileexists("./Plugins/" MODULENAME ".Ayria"))
+        if (!Fileexists(Filename))
         {
             miniz_cpp::zip_file Archive;
-            Archive.save("./Plugins/" MODULENAME ".Ayria");
-            return false;
+            Archive.save(Filename);
         }
 
-        // List all files.
-        miniz_cpp::zip_file Archive("./Plugins/" MODULENAME ".Ayria");
-        auto Filelist = Archive.namelist();
+        return new miniz_cpp::zip_file(Filename);
+    }
+    void Savearchive(Archivehandle &Handle, std::string Filename)
+    {
+        auto Archive = reinterpret_cast<miniz_cpp::zip_file *>(Handle);
+        Archive->save(Filename);
+    }
+    std::string Read(Archivehandle &Handle, std::string Filename)
+    {
+        auto Archive = reinterpret_cast<miniz_cpp::zip_file *>(Handle);
+
+        if (!Archive->has_file(Filename)) return {};
+        else return Archive->read(Filename);
+    }
+    void Write(Archivehandle &Handle, std::string Filename, std::string &Buffer)
+    {
+        auto Archive = reinterpret_cast<miniz_cpp::zip_file *>(Handle);
+        Delete(Handle, Filename);
+
+        Archive->writestr(Filename, Buffer);
+        Savearchive(Handle, Archive->get_filename());
+    }
+    bool Findfiles(Archivehandle &Handle, std::string Criteria, std::vector<std::string> *Filenames)
+    {
+        auto Archive = reinterpret_cast<miniz_cpp::zip_file *>(Handle);
+        auto Filelist = Archive->namelist();
 
         // Enqueue the files matching the extension.
         for (auto &Item : Filelist)
@@ -33,67 +91,28 @@ namespace Package
 
         return Filenames->size() > 0;
     }
-    void Write(std::string Filename, std::string &Buffer)
+    bool Exists(Archivehandle &Handle, std::string Filename)
     {
-        // Workaround for dev-plugins not having the file.
-        if (!Fileexists("./Plugins/" MODULENAME ".Ayria"))
-        {
-            miniz_cpp::zip_file Archive;
-            Archive.save("./Plugins/" MODULENAME ".Ayria");
-        }
-
-        Delete(Filename);
-
-        // Write directly to the archive.
-        miniz_cpp::zip_file Archive("./Plugins/" MODULENAME ".Ayria");
-        Archive.writestr(Filename, Buffer);
-        Archive.save("./Plugins/" MODULENAME ".Ayria");
+        auto Archive = reinterpret_cast<miniz_cpp::zip_file *>(Handle);
+        return Archive->has_file(Filename);
     }
-    std::string Read(std::string Filename)
+    void Delete(Archivehandle &Handle, std::string Filename)
     {
-        // Workaround for dev-plugins not having the file.
-        if (!Fileexists("./Plugins/" MODULENAME ".Ayria"))
-        {
-            miniz_cpp::zip_file Archive;
-            Archive.save("./Plugins/" MODULENAME ".Ayria");
-        }
+        if (!Exists(Handle, Filename)) return;
 
-        // Write directly to the archive.
-        miniz_cpp::zip_file Archive("./Plugins/" MODULENAME ".Ayria");
-        if (!Archive.has_file(Filename)) return {};
-        else return Archive.read(Filename);
-    }
-    bool Exists(std::string Filename)
-    {
-        // Workaround for dev-plugins not having the file.
-        if (!Fileexists("./Plugins/" MODULENAME ".Ayria"))
-        {
-            miniz_cpp::zip_file Archive;
-            Archive.save("./Plugins/" MODULENAME ".Ayria");
-            return false;
-        }
+        auto Archive = reinterpret_cast<miniz_cpp::zip_file *>(Handle);
+        auto Newarchive = new miniz_cpp::zip_file();
+        auto Filelist = Archive->namelist();
 
-        // Write directly to the archive.
-        miniz_cpp::zip_file Archive("./Plugins/" MODULENAME ".Ayria");
-        return Archive.has_file(Filename);
-    }
-    void Delete(std::string Filename)
-    {
-        if (!Exists(Filename))
-            return;
-
-        // List all files.
-        miniz_cpp::zip_file Oldarchive("./Plugins/" MODULENAME ".Ayria");
-        auto Filelist = Oldarchive.namelist();
-
-        // Read all items we want to save.
-        miniz_cpp::zip_file Newarchive;
         for (auto &Item : Filelist)
-            if(0 != std::strcmp(Item.c_str(), Filename.c_str()))
-                Newarchive.writestr(Item, Oldarchive.read(Item));
+        {
+            if (0 != std::strcmp(Item.c_str(), Filename.c_str()))
+            {
+                Newarchive->writestr(Item, Archive->read(Item));
+            }
+        }
 
-        // Delete the old archive.
-        std::remove("./Plugins/" MODULENAME ".Ayria");
-        Newarchive.save("./Plugins/" MODULENAME ".Ayria");
+        delete Handle;
+        Handle = Newarchive;
     }
 }
