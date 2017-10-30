@@ -3,6 +3,8 @@
     Started: 29-10-2017
     License: MIT
     Notes:
+        Plugins keep their files in their archive.
+        Initial test version, horribly inefficient.
 */
 
 #pragma once
