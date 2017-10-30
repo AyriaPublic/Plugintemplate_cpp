@@ -1,7 +1,7 @@
 /*
     Initial author: Convery (tcn@ayria.se)
     Started: 15-10-2017
-    License: Closedsource
+    License: MIT
     Notes:
         Plugins keep their files in their archive.
         Initial test version, horribly inefficient.
