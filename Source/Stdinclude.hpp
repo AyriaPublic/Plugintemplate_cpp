@@ -49,5 +49,6 @@
 #include "Utility/Memprotect.hpp"
 #include "Utility/Bytebuffer.hpp"
 #include "Utility/FNV1Hash.hpp"
+#include "Utility/Hooking.hpp"
 #include "Utility/Logfile.hpp"
 #include "Utility/Base64.hpp"
