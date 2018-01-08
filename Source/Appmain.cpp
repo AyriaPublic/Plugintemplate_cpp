@@ -55,11 +55,17 @@ extern "C" EXPORT_ATTR void onMessage(uint32_t MessageID, uint32_t Messagesize, 
 #if defined _WIN32
 BOOLEAN WINAPI DllMain(HINSTANCE hDllHandle, DWORD nReason, LPVOID Reserved)
 {
-    // Opt-out of further thread notifications.
-    DisableThreadLibraryCalls(hDllHandle);
+    switch (nReason)
+    {
+        case DLL_PROCESS_ATTACH:
+        {
+            // Opt-out of further thread notifications.
+            DisableThreadLibraryCalls(hDllHandle);
 
-    // Clear the previous sessions logfile.
-    Clearlog();
+            // Clear the previous sessions logfile.
+            Clearlog();
+        }
+    }
 
     return TRUE;
 }
