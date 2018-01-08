@@ -43,3 +43,9 @@
     #include <dlfcn.h>
 #endif
 
+// Utility modules.
+#include "Utility/Variadicstring.hpp"
+#include "Utility/Filesystem.hpp"
+#include "Utility/Memprotect.hpp"
+#include "Utility/FNV1Hash.hpp"
+#include "Utility/Logfile.hpp"
