@@ -1,14 +1,13 @@
 /*
     Initial author: Convery (tcn@ayria.se)
-    Started: 29-10-2017
+    Started: 08-01-2018
     License: MIT
     Notes:
-        Plugins keep their files in their archive.
-        Initial test version, horribly inefficient.
+        Plugins should keep all their files in their archive.
 */
 
 #pragma once
-#include "../../Stdinclude.h"
+#include "../Stdinclude.hpp"
 
 namespace Package
 {
@@ -30,4 +29,3 @@ namespace Package
     bool Exists(Archivehandle &Handle, std::string Filename);
     void Delete(Archivehandle &Handle, std::string Filename);
 }
-

@@ -1,13 +1,13 @@
 /*
     Initial author: Convery (tcn@ayria.se)
-    Started: 29-07-2017
+    Started: 08-01-2018
     License: MIT
     Notes:
         Fast but not actually cryptographically secure hashing.
 */
 
 #pragma once
-#include "../../Stdinclude.h"
+#include "../Stdinclude.hpp"
 
 namespace Hash
 {

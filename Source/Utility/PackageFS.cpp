@@ -1,14 +1,13 @@
 /*
     Initial author: Convery (tcn@ayria.se)
-    Started: 15-10-2017
+    Started: 08-01-2018
     License: MIT
     Notes:
-        Plugins keep their files in their archive.
-        Initial test version, horribly inefficient.
+        Plugins should keep all their files in their archive.
 */
 
-#include "../../Stdinclude.h"
-#include "zip_file.hpp"
+#include "../Stdinclude.hpp"
+#include "Thirdparty/zip_file.hpp"
 
 namespace Package
 {
@@ -112,7 +111,8 @@ namespace Package
             }
         }
 
-        delete Handle;
-        Handle = Newarchive;
+        std::vector<uint8_t> Buffer;
+        Newarchive->save(Buffer);
+        Archive->load(Buffer);
     }
 }

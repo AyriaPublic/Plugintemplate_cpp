@@ -1,14 +1,14 @@
 /*
     Initial author: Convery (tcn@ayria.se)
-    Started: 29-07-2017
+    Started: 08-01-2018
     License: MIT
     Notes:
-        A hook allows your plugin to take control over the game.
-        It may replace a function in the game with your own.
+        A hook takes control over code-execution and can
+        redirect it to your function instead of the apps.
 */
 
 #pragma once
-#include "../../Stdinclude.h"
+#include "../Stdinclude.hpp"
 
 namespace Hooking
 {

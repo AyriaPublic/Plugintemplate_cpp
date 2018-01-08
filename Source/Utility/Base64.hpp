@@ -1,20 +1,20 @@
 /*
     Initial author: Convery (tcn@ayria.se)
-    Started: 29-07-2017
+    Started: 08-01-2018
     License: MIT
     Notes:
-        Base64 encoding and decoding of data.
+        Base64 encoding and decoding of strings.
 */
 
 #pragma once
-#include "../../Stdinclude.h"
+#include "../Stdinclude.hpp"
 
 namespace Base64
 {
     namespace Internal
     {
-        static const char Table[65] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-        static const char Reversetable[128] = {
+        static constexpr char Table[65] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        static constexpr char Reversetable[128] = {
         64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
         64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
         64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 62, 64, 64, 64, 63,
@@ -26,25 +26,25 @@ namespace Base64
         };
     }
 
-    inline std::string Encode(std::string Input)
+    inline std::string Encode(std::string_view Input)
     {
         std::string Result((((Input.size() + 2) / 3) * 4), '=');
         size_t Outputposition = 0;
         uint32_t Accumulator = 0;
         int32_t Bits = 0;
 
-        for(auto &Item : Input)
+        for (auto &Item : Input)
         {
             Accumulator = (Accumulator << 8) | (Item & 0xFF);
             Bits += 8;
-            while(Bits >= 6)
+            while (Bits >= 6)
             {
                 Bits -= 6;
                 Result[Outputposition++] = Internal::Table[(Accumulator >> Bits) & 0x3F];
             }
         }
 
-        if(Bits)
+        if (Bits)
         {
             Accumulator <<= 6 - Bits;
             Result[Outputposition++] = Internal::Table[Accumulator & 0x3F];
@@ -52,20 +52,20 @@ namespace Base64
 
         return Result;
     }
-    inline std::string Decode(std::string Input)
+    inline std::string Decode(std::string_view Input)
     {
         std::string Result;
         uint32_t Accumulator = 0;
         int32_t Bits = 0;
 
-        for(auto &Item : Input)
+        for (auto &Item : Input)
         {
-            if(Item == '=') continue;
+            if (Item == '=') continue;
 
             Accumulator = (Accumulator << 6) | Internal::Reversetable[uint8_t(Item)];
             Bits += 6;
 
-            if(Bits >= 8)
+            if (Bits >= 8)
             {
                 Bits -= 8;
                 Result += char((Accumulator >> Bits) & 0xFF);
