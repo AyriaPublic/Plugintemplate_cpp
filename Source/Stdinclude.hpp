@@ -48,6 +48,7 @@
 #include "Utility/Filesystem.hpp"
 #include "Utility/Memprotect.hpp"
 #include "Utility/Bytebuffer.hpp"
+#include "Utility/PackageFS.hpp"
 #include "Utility/FNV1Hash.hpp"
 #include "Utility/Hooking.hpp"
 #include "Utility/Logfile.hpp"

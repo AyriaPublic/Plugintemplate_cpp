@@ -9,7 +9,8 @@
 #pragma once
 
 // Identifying name for this module.
-#define MODULENAME "Nativebootstrap"
+#define MODULENAME "Plugintemplate"
+#define MODULEEXTENSION "Ayria"
 
 // Fixup for Visual Studio 2015 no longer defining this.
 #if !defined(_DEBUG) && !defined(NDEBUG)
