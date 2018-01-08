@@ -49,3 +49,4 @@
 #include "Utility/Memprotect.hpp"
 #include "Utility/FNV1Hash.hpp"
 #include "Utility/Logfile.hpp"
+#include "Utility/Base64.hpp"

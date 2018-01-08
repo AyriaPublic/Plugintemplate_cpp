@@ -6,7 +6,8 @@
         Fast but not actually cryptographically secure hashing.
 */
 
-#include "Stdinclude.hpp"
+#pragma once
+#include "../Stdinclude.hpp"
 
 namespace Hash
 {
