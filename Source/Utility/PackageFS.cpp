@@ -30,10 +30,10 @@ namespace Package
         auto Handle = Loadarchive("./Plugins/" MODULENAME "." MODULEEXTENSION);
         return Write(Handle, Filename, Buffer);
     }
-    bool Findfiles(std::string Criteria, std::vector<std::string> *Filenames)
+    std::vector<std::string> Findfiles(std::string Criteria)
     {
         auto Handle = Loadarchive("./Plugins/" MODULENAME "." MODULEEXTENSION);
-        return Findfiles(Handle, Criteria, Filenames);
+        return Findfiles(Handle, Criteria);
     }
     bool Exists(std::string Filename)
     {
@@ -78,17 +78,18 @@ namespace Package
         Archive->writestr(Filename, Buffer);
         Savearchive(Handle, Archive->get_filename());
     }
-    bool Findfiles(Archivehandle &Handle, std::string Criteria, std::vector<std::string> *Filenames)
+    std::vector<std::string> Findfiles(Archivehandle &Handle, std::string Criteria)
     {
         auto Archive = reinterpret_cast<miniz_cpp::zip_file *>(Handle);
         auto Filelist = Archive->namelist();
+        std::vector<std::string> Filenames;
 
         // Enqueue the files matching the extension.
         for (auto &Item : Filelist)
             if (std::strstr(Item.c_str(), Criteria.c_str()))
-                Filenames->push_back(Item);
+                Filenames.push_back(Item);
 
-        return Filenames->size() > 0;
+        return std::move(Filenames);
     }
     bool Exists(Archivehandle &Handle, std::string Filename)
     {
