@@ -18,7 +18,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     endif()
 else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG} -g")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG} -g")
 endif()
 
 # Separate release and debugbuilds output and dependencies.
@@ -51,7 +51,7 @@ endif()
 
 # Library dependencies for the platforms.
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-        target_link_libraries(Plugintemplate dl pthread)
+    target_link_libraries(Plugintemplate dl pthread)
 else()
 endif()
 
