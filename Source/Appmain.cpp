@@ -47,7 +47,7 @@ extern "C" EXPORT_ATTR void onMessage(uint32_t MessageID, uint32_t Messagesize, 
     // MessageID is a FNV1a_32 hash of a string.
     switch (MessageID)
     {
-        case Hash::FNV1a_32(MODULENAME "_Default"):
+        case Hash::FNV1a_32(MODULENAME "::Default"):
         default: break;
     }
 }
