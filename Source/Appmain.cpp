@@ -42,7 +42,7 @@ extern "C" EXPORT_ATTR void onMessage(uint32_t MessageID, uint32_t Messagesize, 
         ----------------------------------------------------------------------
     */
 
-    // Create a buffer from the data as such:
+    // Create a buffer from the data like such:
     // Bytebuffer Message{ Messagesize, Messagedata};
 
     // MessageID is a FNV1a_32 hash of a string.
