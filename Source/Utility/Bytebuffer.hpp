@@ -9,46 +9,46 @@
 #pragma once
 #include "../Stdinclude.hpp"
 
+// The types of data that can be handled.
+enum Bytebuffertype : uint8_t
+{
+    BB_NONE = 0,
+    BB_BOOL = 1,
+    BB_SINT8 = 2,
+    BB_UINT8 = 3,
+    BB_SINT16 = 4,
+    BB_UINT16 = 5,
+    BB_SINT32 = 6,
+    BB_UINT32 = 7,
+    BB_SINT64 = 8,
+    BB_UINT64 = 9,
+    BB_FLOAT32 = 10,
+    BB_FLOAT64 = 11,
+    BB_STRING_WIDE = 12,
+    BB_STRING_ASCII = 13,
+    BB_BLOB = 14,
+    BB_ARRAY = 15,
+    BB_MAX
+};
+
+// Generic storage-type.
+using Type_t = std::pair<Bytebuffertype, void *>;
+
 class Bytebuffer
 {
-    // The types of data that can be handled.
-    enum Bytebuffertype : uint8_t
-    {
-        BB_NONE = 0,
-        BB_BOOL = 1,
-        BB_SINT8 = 2,
-        BB_UINT8 = 3,
-        BB_SINT16 = 4,
-        BB_UINT16 = 5,
-        BB_SINT32 = 6,
-        BB_UINT32 = 7,
-        BB_SINT64 = 8,
-        BB_UINT64 = 9,
-        BB_FLOAT32 = 10,
-        BB_FLOAT64 = 11,
-        BB_STRING_WIDE = 12,
-        BB_STRING_ASCII = 13,
-        BB_BLOB = 14,
-        BB_ARRAY = 15,
-        BB_MAX
-    };
-
-    // Generic storage-types.
-    using Type_t = std::pair<Bytebuffertype, void *>;
-
     // Internal state properties.
     std::unique_ptr<uint8_t[]> Internalbuffer;
     std::vector<Type_t> Internalvariables;
     size_t Internaliterator;
     size_t Internalsize;
 
+public:
     // Core functionality.
     bool Readdatatype(Bytebuffertype Type);                         // Compares the next byte with the input.
     bool Writedatatype(Bytebuffertype Type);                        // Writes the input as the next byte.
     bool Rawread(size_t Readcount, void *Buffer = nullptr);         // Reads from the internal buffer.
     bool Rawwrite(size_t Writecount, const void *Buffer = nullptr); // Writes to the internal buffer.
 
-public:
     // Creates the internal state.
     Bytebuffer(size_t Datasize, const void *Databuffer);
     void Setbuffer(std::vector<uint8_t> &Data);
