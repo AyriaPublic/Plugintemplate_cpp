@@ -62,8 +62,6 @@ Bytebuffer::Bytebuffer(size_t Datasize, const void *Databuffer)
     Internalsize = Datasize;
     Internalbuffer = std::make_unique<uint8_t[]>(Internalsize);
     std::memcpy(Internalbuffer.get(), Databuffer, Internalsize);
-
-    Deserialize();
 }
 void Bytebuffer::Setbuffer(std::vector<uint8_t> &Data)
 {
@@ -71,8 +69,6 @@ void Bytebuffer::Setbuffer(std::vector<uint8_t> &Data)
     Internalsize = Data.size();
     Internalbuffer = std::make_unique<uint8_t[]>(Internalsize);
     std::memcpy(Internalbuffer.get(), Data.data(), Internalsize);
-
-    Deserialize();
 }
 Bytebuffer::Bytebuffer(std::vector<uint8_t> &Data)
 {
@@ -85,9 +81,6 @@ Bytebuffer::Bytebuffer(const Bytebuffer &Right)
 
     Internaliterator = Right.Internaliterator;
     Internalsize = Right.Internalsize;
-
-    Internalvariables.clear();
-    Deserialize();
 }
 void Bytebuffer::Setbuffer(std::string &Data)
 {
@@ -95,17 +88,12 @@ void Bytebuffer::Setbuffer(std::string &Data)
     Internalsize = Data.size();
     Internalbuffer = std::make_unique<uint8_t[]>(Internalsize);
     std::memcpy(Internalbuffer.get(), Data.data(), Internalsize);
-
-    Deserialize();
 }
 Bytebuffer::Bytebuffer(Bytebuffer &&Right)
 {
     Internaliterator = std::exchange(Right.Internaliterator, NULL);
     Internalbuffer = std::exchange(Right.Internalbuffer, nullptr);
     Internalsize = std::exchange(Right.Internalsize, NULL);
-
-    Internalvariables.clear();
-    Deserialize();
 }
 Bytebuffer::Bytebuffer(std::string &Data)
 {
@@ -169,6 +157,7 @@ std::string Bytebuffer::to_string()
         return Result;
     };
 
+    Deserialize();
     for (auto &Item : Internalvariables)
     {
         // Simple type.
@@ -320,12 +309,6 @@ void Bytebuffer::Deserialize()
         }
 
         break;
-    }
-
-    if (Localiterator != Internalsize)
-    {
-        Internalvariables.clear();
-        Internalvariables.shrink_to_fit();
     }
 }
 void Bytebuffer::Rewind()
