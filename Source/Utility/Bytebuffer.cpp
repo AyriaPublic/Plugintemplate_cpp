@@ -272,7 +272,7 @@ void Bytebuffer::Deserialize()
         Localiterator += sizeof(uint8_t);
 
         // Simple type.
-        if (Localtype >= BB_BOOL && Localtype <= BB_STRING_ASCII)
+        if (Localtype >= BB_BOOL && Localtype <= BB_STRING_WIDE)
         {
             Internalvariables.push_back(Localread(Localtype));
             Localincrement(Localtype);
@@ -280,8 +280,9 @@ void Bytebuffer::Deserialize()
         }
 
         // Collection.
-        if (Localtype >= BB_BOOL + 100 && Localtype <= BB_STRING_ASCII + 100)
+        if (Localtype >= BB_BOOL + 100 && Localtype <= BB_STRING_WIDE + 100)
         {
+            
             uint32_t Arraysize = *(uint32_t *)(Localpointer + Localiterator);
             auto Arraydata = new std::vector<Type_t>();
             Localiterator += sizeof(uint32_t);
