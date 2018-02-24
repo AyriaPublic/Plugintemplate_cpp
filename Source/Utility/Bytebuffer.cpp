@@ -146,7 +146,7 @@ std::string Bytebuffer::to_string()
             case Bytebuffertype::BB_BLOB:
                 Result += va("std::array<uint8_t>[%u] = { \"", ((std::string *)Item.second)->size());
                 for (size_t i = 0; i < ((std::string *)Item.second)->size(); ++i)
-                    Result += va("\\x%02X", ((std::string *)Item.second)->at(i));
+                    Result += va("\\x%02X", (uint8_t)((std::string *)Item.second)->at(i));
                 Result += "\" };\n";
                 break;
 
