@@ -31,11 +31,11 @@ enum Bytebuffertype : uint8_t
     BB_MAX
 };
 
-// Generic storage-type.
-using Type_t = std::pair<Bytebuffertype, void *>;
-
 class Bytebuffer
 {
+    // Generic storage-type.
+    using Type_t = std::pair<Bytebuffertype, void *>;
+    
     // Internal state properties.
     std::unique_ptr<uint8_t[]> Internalbuffer;
     std::vector<Type_t> Internalvariables;
@@ -91,5 +91,4 @@ public:
     Bytebuffer &operator = (const Bytebuffer &Right) noexcept;
     Bytebuffer &operator = (Bytebuffer &&Right) noexcept;
     bool operator == (const Bytebuffer &Right) noexcept;
-    Type_t &operator [](size_t Index) noexcept;
 };
