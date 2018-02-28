@@ -564,9 +564,3 @@ bool Bytebuffer::operator == (const Bytebuffer &Right) noexcept
     if (Internalsize != Right.Internalsize) return false;
     return 0 == std::memcmp(Internalbuffer.get(), Right.Internalbuffer.get(), Internalsize);
 }
-Bytebuffer::Type_t &Bytebuffer::operator [](size_t Index) noexcept
-{
-    static Type_t Defaultvalue = { Bytebuffertype::BB_NONE, nullptr };
-    if (Internalvariables.size() < Index) return Defaultvalue;
-    else return Internalvariables[Index];
-}
