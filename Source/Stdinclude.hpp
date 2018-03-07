@@ -15,7 +15,7 @@
 // Standard libraries.
 #include <unordered_map>
 #include <string_view>
-#include <assert.h>
+#include <cassert>
 #include <cstdint>
 #include <cstdarg>
 #include <cstring>
