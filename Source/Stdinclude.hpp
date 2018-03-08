@@ -47,7 +47,6 @@
 // Utility modules.
 #include "Utility/Variadicstring.hpp"
 #include "Utility/Patternscan.hpp"
-#include "Utility/Filesystem.hpp"
 #include "Utility/Memprotect.hpp"
 #include "Utility/Bytebuffer.hpp"
 #include "Utility/PackageFS.hpp"
