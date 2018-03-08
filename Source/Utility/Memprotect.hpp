@@ -73,4 +73,14 @@ namespace Memprotect
     }
 
     #endif
+
+    // Helpers to provide more readable code.
+    inline void Protectrange(std::uintptr_t Address, const size_t Length, unsigned long Oldprotection)
+    {
+        return Protectrange(reinterpret_cast<void *>(Address), Length, Oldprotection);
+    }
+    inline unsigned long Unprotectrange(std::uintptr_t Address, const size_t Length)
+    {
+        return Unprotectrange(reinterpret_cast<void *>(Address), Length);
+    }
 }
