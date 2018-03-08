@@ -5750,7 +5750,7 @@ namespace Package
         void Savearchive()
         {
             static uint64_t Timestamp = 0;
-            if (time(NULL) - Timestamp > 5)
+            if (time(NULL) - Timestamp > 5000)
             {
                 if(Archive) Archive->save("./Plugins/" MODULENAME "." MODULEEXTENSION);
                 Timestamp = time(NULL);
