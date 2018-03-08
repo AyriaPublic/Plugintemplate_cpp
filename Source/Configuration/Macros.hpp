@@ -30,5 +30,7 @@
     #define unlikely(x)     __builtin_expect(!!(x), 0)
 #endif
 
-// Patternscanning.
+// Pattern-scanning.
 #define Findpattern(Segment, String) Pattern::_Findpattern(Segment, Pattern::Stringtopattern(String), Pattern::Stringtomask(String))
+#define Findpatterntext(String) Findpattern(Pattern:Textsegment, String)
+#define Findpatterndata(String) Findpattern(Pattern:Datasegment, String)
