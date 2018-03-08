@@ -34,7 +34,7 @@ namespace Hooking
             Memprotect::Protectrange(Savedlocation, 7, Protection);
         }
         void Reinstall() { Install(Savedlocation, Savedtarget); }
-        static Stomphook<Signature> Install(void *Location, void *Target, bool Followjumps = true)
+        static Stomphook Install(void *Location, void *Target, bool Followjumps = true)
         {
             uint8_t *Address = (uint8_t *)Location;
             Stomphook<Signature> Localhook;
