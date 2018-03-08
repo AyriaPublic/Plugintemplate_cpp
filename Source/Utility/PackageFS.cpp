@@ -5745,15 +5745,15 @@ namespace Package
             if (!Archive)
             {
                 Archive = new miniz_cpp::zip_file("./Plugins/" MODULENAME "." MODULEEXTENSION);
-                std::atexit([]()
-                {
-                    if (Archive)
-                    {
-                        Archive->save("./Plugins/" MODULENAME "." MODULEEXTENSION);
-                        delete Archive;
-                        Archive = nullptr;
-                    }
-                });
+            }
+        }
+        void Savearchive()
+        {
+            static uint64_t Timestamp = 0;
+            if (time(NULL) - Timestamp > 5)
+            {
+                if(Archive) Archive->save("./Plugins/" MODULENAME "." MODULEEXTENSION);
+                Timestamp = time(NULL);
             }
         }
     }
@@ -5762,6 +5762,7 @@ namespace Package
     void Deletefile(std::string_view Filename)
     {
         if (!Fileexists(Filename)) return;
+        if (!Internal::Archive) return;
 
         Internal::Threadguard.lock();
         {
@@ -5778,7 +5779,9 @@ namespace Package
 
             std::vector<uint8_t> Buffer;
             Newarchive->save(Buffer);
+
             Internal::Archive->load(Buffer);
+            Internal::Savearchive();
         }
         Internal::Threadguard.unlock();
     }
@@ -5786,6 +5789,7 @@ namespace Package
     {
         std::string Result{};
         Internal::Openarchive();
+        if (!Internal::Archive) return {};
 
         Internal::Threadguard.lock();
         {
@@ -5803,9 +5807,12 @@ namespace Package
         Internal::Openarchive();
         Deletefile(Filename);
 
+        if (!Internal::Archive) return;
+
         Internal::Threadguard.lock();
         {
             Internal::Archive->writestr(Filename.data(), Filebuffer);
+            Internal::Savearchive();
         }
         Internal::Threadguard.unlock();
     }
@@ -5815,6 +5822,8 @@ namespace Package
     {
         std::vector<std::string> Result{};
         Internal::Openarchive();
+
+        if (!Internal::Archive) return {};
 
         Internal::Threadguard.lock();
         {
@@ -5830,17 +5839,23 @@ namespace Package
     uint64_t Filetimestamp(std::string_view Filename)
     {
         Internal::Openarchive();
+        if (!Internal::Archive) return {};
+
         auto File = Internal::Archive->getinfo(Filename.data());
         return File.timestamp;
     }
     bool Fileexists(std::string_view Filename)
     {
         Internal::Openarchive();
+        if (!Internal::Archive) return false;
+
         return Internal::Archive->has_file(Filename.data());
     }
     size_t Filesize(std::string_view Filename)
     {
         Internal::Openarchive();
+        if (!Internal::Archive) return {};
+
         auto File = Internal::Archive->getinfo(Filename.data());
         return File.file_size;
     }
