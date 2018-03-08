@@ -19,21 +19,27 @@ namespace Internal
 
     constexpr const char *Filepath = "./Plugins/Logs/" MODULENAME ".log";
     static std::mutex Threadguard;
+    static std::FILE *Filehandle;
 }
 
-// Output to file, assumes nullterminated strings.
+// Output to file, assumes null-terminated strings.
 inline void Logprint(std::string_view Message)
 {
     // Prevent multiple writes to the file.
     Internal::Threadguard.lock();
     {
-        // Append to the logfile.
-        auto Filehandle = std::fopen(Internal::Filepath, "a");
-        if (Filehandle)
+        // Open the logfile.
+        if (!Internal::Filehandle)
         {
-            std::fputs(Message.data(), Filehandle);
-            std::fputs("\n", Filehandle);
-            std::fclose(Filehandle);
+            Internal::Filehandle = std::fopen(Internal::Filepath, "a");
+        }
+
+        // Append to the logfile.
+        if (Internal::Filehandle)
+        {
+            std::fputs(Message.data(), Internal::Filehandle);
+            std::fputs("\n", Internal::Filehandle);
+            std::fflush(Internal::Filehandle);
         }
     }
     Internal::Threadguard.unlock();
