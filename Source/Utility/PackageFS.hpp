@@ -17,6 +17,8 @@ namespace Package
     void Writefile(std::string_view Filename, std::string Filebuffer);
 
     // Get file-information.
-    std::vector<std::string> Findfiles(std::string Criteria);
-    bool Fileexists(std::string Filename);
+    std::vector<std::string> Findfiles(std::string_view Criteria);
+    uint64_t Filetimestamp(std::string_view Filename);
+    bool Fileexists(std::string_view Filename);
+    size_t Filesize(std::string_view Filename);
 }
