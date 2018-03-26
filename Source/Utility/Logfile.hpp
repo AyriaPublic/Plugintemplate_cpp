@@ -69,5 +69,7 @@ inline void Logformatted(std::string_view Message, char Prefix)
 inline void Clearlog()
 {
     std::remove(Internal::Filepath);
-    Logformatted(MODULENAME " - Starting up..", 'I');
+    
+    // NOTE(Convery): We might not want to create a log by default.
+    // Logformatted(MODULENAME " - Starting up..", 'I');
 }
