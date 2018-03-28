@@ -21,17 +21,17 @@ namespace Hooking
     struct Stomphook
     {
         std::function<Signature> Function;
-        uint8_t Savedtext[7]{};
+        uint8_t Savedtext[16]{};
         void *Savedlocation;
         void *Savedtarget;
 
         void Remove()
         {
-            auto Protection = Memprotect::Unprotectrange(Savedlocation, 7);
+            auto Protection = Memprotect::Unprotectrange(Savedlocation, 16);
             {
-                std::memcpy(Savedlocation, Savedtext, 7);
+                std::memcpy(Savedlocation, Savedtext, 16);
             }
-            Memprotect::Protectrange(Savedlocation, 7, Protection);
+            Memprotect::Protectrange(Savedlocation, 16, Protection);
         }
         void Reinstall() { Install(Savedlocation, Savedtarget); }
         static Stomphook Install(void *Location, void *Target, bool Followjumps = true)
@@ -39,43 +39,41 @@ namespace Hooking
             uint8_t *Address = (uint8_t *)Location;
             Stomphook<Signature> Localhook;
 
-            // Check if there's already a hook in-place.
-            while (Followjumps)
-            {
-                // x86_32 short jump.
-                if (Address[0] == 0xE9)
-                {
-                    Address += *(uint32_t *)&Address[1] - 5;
-                    continue;
-                }
-
-                // x86_64 relative jump.
-                if (Address[0] == 0xFF && Address[1] == 0x25)
-                {
-                    Address += *(uint32_t *)&Address[2] - 7;
-                    continue;
-                }
-
-                break;
-            }
+            /*
+                TODO(Convery):
+                Disassemble the first bytes and check for jumps.
+                Then follow them so we don't overwrite hooks.
+            */
 
             // Save the current information for hook removal.
-            std::memcpy(Localhook.Savedtext, Address, 7);
-            Localhook.Function = *(Signature *)Target;
+            std::memcpy(Localhook.Savedtext, Address, 16);
+            Localhook.Function = *(Signature *)Address;
             Localhook.Savedlocation = Address;
             Localhook.Savedtarget = Target;
 
             // Write the opcodes.
-            auto Protection = Memprotect::Unprotectrange(Address, 7);
+            auto Protection = Memprotect::Unprotectrange(Address, 16);
             {
-                uint32_t Relative = uint32_t((uint8_t *)Target - Address + 7);
-                uint8_t Opcodes[2]{ 0xFF, 0x25 }; // JMP EIP/RIP + Address
-                assert((uint8_t *)Target - Address < INT32_MAX);
+                std::string Opcodes;
 
-                std::memcpy(&Address[0], Opcodes, 2);
-                std::memcpy(&Address[2], &Relative, sizeof(uint32_t));
+                // PUSH EAX/RAX
+                Opcodes.append("\x50", 1);
+                // QWORD modifier
+                if constexpr(sizeof(void *) == 8) Opcodes.append("\x48", 1);
+                // MOV EAX/RAX
+                Opcodes.append("\xB8", 1);
+                // Address to jump to.
+                Opcodes.append((char *)&Target, sizeof(void *));
+                // QWORD modifier
+                if constexpr(sizeof(void *) == 8) Opcodes.append("\x48", 1);
+                // XCHG EAX/RAX, [ESP/RSP]
+                Opcodes.append("\x87\x04\x24", 3);
+                // RET
+                Opcodes.append("\xC3", 1);
+
+                std::memcpy(Address, Opcodes.data(), Opcodes.size());
             }
-            Memprotect::Protectrange(Address, 7, Protection);
+            Memprotect::Protectrange(Address, 16, Protection);
 
             return Localhook;
         }
@@ -90,66 +88,6 @@ namespace Hooking
         static Stomphook Install(std::uintptr_t Location, void *Target, bool Followjumps = true)
         {
             return Install(reinterpret_cast<void *>(Location), Target, Followjumps);
-        }
-    };
-
-    // Replace a call to a function with our own.
-    template <typename Signature = void(void)>
-    struct Callhook
-    {
-        std::function<Signature> Function;
-        uint8_t Savedtext[7]{};
-        void *Savedlocation;
-        void *Savedtarget;
-
-        void Remove()
-        {
-            auto Protection = Memprotect::Unprotectrange(Savedlocation, 7);
-            {
-                std::memcpy(Savedlocation, Savedtext, 7);
-            }
-            Memprotect::Protectrange(Savedlocation, 7, Protection);
-        }
-        void Reinstall() { Install(Savedlocation, Savedtarget); }
-        static Callhook Install(void *Location, void *Target)
-        {
-            uint8_t *Address = (uint8_t *)Location;
-            Callhook<Signature> Localhook;
-
-            // Check if there's a call at the address.
-            assert(Address[0] != 0xFF && Address[1] != 0x15);
-
-            // Save the current information for hook removal.
-            Localhook.Function = *(Signature *)uint64_t(*(uint32_t *)&Address[2] - 7);
-            std::memcpy(Localhook.Savedtext, Address, 7);
-            Localhook.Savedlocation = Address;
-            Localhook.Savedtarget = Target;
-
-            // Write the opcodes.
-            auto Protection = Memprotect::Unprotectrange(Address, 7);
-            {
-                uint32_t Relative = uint32_t((uint8_t *)Target - Address + 7);
-                uint8_t Opcodes[2]{ 0xFF, 0x15 }; // CALL EIP/RIP + Address.
-                assert((uint8_t *)Target - Address < INT32_MAX);
-
-                std::memcpy(&Address[0], Opcodes, 2);
-                std::memcpy(&Address[2], &Relative, sizeof(uint32_t));
-            }
-            Memprotect::Protectrange(Address, 7, Protection);
-
-            return Localhook;
-        }
-        static Callhook Install(std::uintptr_t Location, std::uintptr_t Target)
-        {
-            return Install(reinterpret_cast<void *>(Location), reinterpret_cast<void *>(Target));
-        }
-        static Callhook Install(void *Location, std::uintptr_t Target)
-        {
-            return Install(Location, reinterpret_cast<void *>(Target));
-        }
-        static Callhook Install(std::uintptr_t Location, void *Target)
-        {
-            return Install(reinterpret_cast<void *>(Location), Target);
         }
     };
 
@@ -205,14 +143,6 @@ namespace Hooking
         return Result;
     }
 
-    Hooking::Callhook<decltype(std::memcpy)> Callhook;
-    void *Callfunc(void *Src, void *Dst, size_t Size)
-    {
-        printf("Copying %llX bytes!\n", Size);
-        return Callhook.Function(Src, Dst, Size);
-    }
-
     Stomphook = Hooking::Stomphook<decltype(std::memcpy)>::Install(std::memcpy, Stompfunc);
-    Callhook = Hooking::Callhook<decltype(std::memcpy)>::Install(0x07001000, Callfunc);
     Patch = Hooking::NOPPatch<sizeof(std::memcpy)>::Install(std::memcpy);
 */
