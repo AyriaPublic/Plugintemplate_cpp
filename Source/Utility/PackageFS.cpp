@@ -5740,13 +5740,6 @@ namespace Package
         miniz_cpp::zip_file *Archive;
         std::mutex Threadguard;
 
-        void Openarchive()
-        {
-            if (!Archive)
-            {
-                Archive = new miniz_cpp::zip_file("./Plugins/" MODULENAME "." MODULEEXTENSION);
-            }
-        }
         void Savearchive()
         {
             static uint64_t Timestamp = 0;
@@ -5754,6 +5747,22 @@ namespace Package
             {
                 if(Archive) Archive->save("./Plugins/" MODULENAME "." MODULEEXTENSION);
                 Timestamp = time(NULL);
+            }
+        }
+        void Openarchive()
+        {
+            if (!Archive)
+            {
+                auto Filehandle = std::fopen("./Plugins/" MODULENAME "." MODULEEXTENSION, "rb");
+                if (Filehandle)
+                {
+                    Archive = new miniz_cpp::zip_file("./Plugins/" MODULENAME "." MODULEEXTENSION);
+                    std::fclose(Filehandle);
+                }
+                else
+                {
+                    Archive = new miniz_cpp::zip_file();
+                }
             }
         }
     }
