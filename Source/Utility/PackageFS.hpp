@@ -11,21 +11,14 @@
 
 namespace Package
 {
-    using Archivehandle = void *;
+    // Perform file IO.
+    void Deletefile(std::string_view Filename);
+    std::string Readfile(std::string_view Filename);
+    void Writefile(std::string_view Filename, std::string Filebuffer);
 
-    // Operations on the default archive.
-    std::string Read(std::string Filename);
-    void Write(std::string Filename, std::string &Buffer);
-    std::vector<std::string> Findfiles(std::string Criteria);
-    bool Exists(std::string Filename);
-    void Delete(std::string Filename);
-
-    // Operations on a specific archive.
-    Archivehandle Loadarchive(std::string Filename);
-    void Savearchive(Archivehandle &Handle, std::string Filename);
-    std::string Read(Archivehandle &Handle, std::string Filename);
-    void Write(Archivehandle &Handle, std::string Filename, std::string &Buffer);
-    std::vector<std::string> Findfiles(Archivehandle &Handle, std::string Criteria);
-    bool Exists(Archivehandle &Handle, std::string Filename);
-    void Delete(Archivehandle &Handle, std::string Filename);
+    // Get file-information.
+    std::vector<std::string> Findfiles(std::string_view Criteria);
+    uint64_t Filetimestamp(std::string_view Filename);
+    bool Fileexists(std::string_view Filename);
+    size_t Filesize(std::string_view Filename);
 }

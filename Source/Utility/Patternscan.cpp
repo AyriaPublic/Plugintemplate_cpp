@@ -23,6 +23,10 @@ namespace Pattern
     // Find a single pattern in the range.
     size_t _Findpattern(Range_t &Range, std::vector<uint8_t> Pattern, std::vector<uint8_t> Mask)
     {
+        assert(Range.first != 0);
+        assert(Range.second != 0);
+        assert(Pattern.size() != 0);
+
         uint8_t Firstbyte = Pattern[0];
         auto Base = (const uint8_t *)Range.first;
         size_t Count = Range.second - Range.first - Pattern.size();

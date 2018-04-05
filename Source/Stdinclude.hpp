@@ -15,7 +15,7 @@
 // Standard libraries.
 #include <unordered_map>
 #include <string_view>
-#include <assert.h>
+#include <cassert>
 #include <cstdint>
 #include <cstdarg>
 #include <cstring>
@@ -47,7 +47,6 @@
 // Utility modules.
 #include "Utility/Variadicstring.hpp"
 #include "Utility/Patternscan.hpp"
-#include "Utility/Filesystem.hpp"
 #include "Utility/Memprotect.hpp"
 #include "Utility/Bytebuffer.hpp"
 #include "Utility/PackageFS.hpp"
