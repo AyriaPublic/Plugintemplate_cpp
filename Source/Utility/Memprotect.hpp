@@ -33,7 +33,8 @@ namespace Memprotect
     {
         int Pagesize = getpagesize();
         *(size_t *)&Address -= size_t(Address) % Pagesize;
-        mprotect(Address, Pagesize, Oldprotection);
+        Length += (Length % Pagesize) ? (Pagesize - (Length % Pagesize)) : 0;
+        mprotect(Address, Length, Oldprotection);
     }
     inline unsigned long Unprotectrange(void *Address, const size_t Length)
     {
@@ -48,7 +49,7 @@ namespace Memprotect
 
             while(std::fgets(Buffer, 1024, Filehandle))
             {
-                std::sscanf(Buffer, "%lx-%lx %4s %lx %5s %ld %s", &Start, &End, Permissions, &Foo, Device, &Node, Mapname);
+                std::sscanf(Buffer, "%lx-%lx %4s %lx %5s %lu %s", &Start, &End, Permissions, &Foo, Device, &Node, Mapname);
 
                 if(Start <= (unsigned long)Address || End >= (unsigned long)Address)
                 {
@@ -68,7 +69,8 @@ namespace Memprotect
         // Write the new protection.
         int Pagesize = getpagesize();
         *(size_t *)&Address -= size_t(Address) % Pagesize;
-        mprotect(Address, Pagesize, PROT_READ | PROT_WRITE | PROT_EXEC);
+        Length += (Length % Pagesize) ? (Pagesize - (Length % Pagesize)) : 0;
+        mprotect(Address, Length, PROT_READ | PROT_WRITE | PROT_EXEC);
         return Oldprotection;
     }
 
