@@ -33,8 +33,7 @@ namespace Memprotect
     {
         int Pagesize = getpagesize();
         *(size_t *)&Address -= size_t(Address) % Pagesize;
-        Length += (Length % Pagesize) ? (Pagesize - (Length % Pagesize)) : 0;
-        mprotect(Address, Length, Oldprotection);
+        mprotect(Address, Length + ((Length % Pagesize) ? (Pagesize - (Length % Pagesize)) : 0), Oldprotection);
     }
     inline unsigned long Unprotectrange(void *Address, const size_t Length)
     {
@@ -69,8 +68,7 @@ namespace Memprotect
         // Write the new protection.
         int Pagesize = getpagesize();
         *(size_t *)&Address -= size_t(Address) % Pagesize;
-        Length += (Length % Pagesize) ? (Pagesize - (Length % Pagesize)) : 0;
-        mprotect(Address, Length, PROT_READ | PROT_WRITE | PROT_EXEC);
+        mprotect(Address, Length + ((Length % Pagesize) ? (Pagesize - (Length % Pagesize)) : 0), PROT_READ | PROT_WRITE | PROT_EXEC);
         return Oldprotection;
     }
 
