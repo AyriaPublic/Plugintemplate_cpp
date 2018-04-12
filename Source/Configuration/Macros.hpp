@@ -32,5 +32,5 @@
 
 // Pattern-scanning.
 #define Findpattern(Segment, String) Pattern::_Findpattern(Segment, Pattern::Stringtopattern(String), Pattern::Stringtomask(String))
-#define Findpatterntext(String) Findpattern(Pattern:Textsegment, String)
-#define Findpatterndata(String) Findpattern(Pattern:Datasegment, String)
+#define Findpatterntext(String) Findpattern(Pattern::Textsegment, String)
+#define Findpatterndata(String) Findpattern(Pattern::Datasegment, String)
