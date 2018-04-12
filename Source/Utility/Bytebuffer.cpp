@@ -113,7 +113,7 @@ bool Bytebuffer::Setposition(size_t Newposition)
     Internaliterator = Newposition;
     return true;
 }
-const size_t Bytebuffer::Getposition()
+size_t Bytebuffer::Getposition()
 {
     return Internaliterator;
 }
@@ -193,7 +193,7 @@ const uint8_t *Bytebuffer::Data()
 {
     return Internalbuffer.get();
 }
-const uint8_t Bytebuffer::Peek()
+uint8_t Bytebuffer::Peek()
 {
     uint8_t Byte = uint8_t(-1);
 
@@ -206,7 +206,7 @@ const uint8_t Bytebuffer::Peek()
 
     return Byte;
 }
-const size_t Bytebuffer::Size()
+size_t Bytebuffer::Size()
 {
     return Internalsize;
 }

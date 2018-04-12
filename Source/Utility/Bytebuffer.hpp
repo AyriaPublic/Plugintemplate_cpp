@@ -35,7 +35,7 @@ class Bytebuffer
 {
     // Generic storage-type.
     using Type_t = std::pair<Bytebuffertype, void *>;
-    
+
     // Internal state properties.
     std::unique_ptr<uint8_t[]> Internalbuffer;
     std::vector<Type_t> Internalvariables;
@@ -61,12 +61,12 @@ public:
 
     // Access the internal state.
     bool Setposition(size_t Newposition);                           // Sets the internal read/write iterator.
-    const size_t Getposition();                                     // Gets the internal read/write iterator.
     std::string to_string();                                        // Print Internalvariables.
     const uint8_t *Data();                                          // Returns a pointer to the internal buffer.
-    const uint8_t Peek();                                           // Returns the next byte in the buffer or -1.
-    const size_t Size();                                            // Returns the size of the current buffer.
+    size_t Getposition();                                           // Gets the internal read/write iterator.
     void Deserialize();                                             // Deserialize the buffer into variables.
+    uint8_t Peek();                                                 // Returns the next byte in the buffer or -1.
+    size_t Size();                                                  // Returns the size of the current buffer.
     void Rewind();                                                  // Resets the internal read/write iterator.
     void Clear();                                                   // Clears the internal buffer.
 
