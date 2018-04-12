@@ -136,14 +136,19 @@ namespace Pattern
         HMODULE Module = GetModuleHandleA(NULL);
         if (!Module) return;
 
+        SYSTEM_INFO SI;
+	    GetNativeSystemInfo(&SI);
+
         PIMAGE_DOS_HEADER DOSHeader = (PIMAGE_DOS_HEADER)Module;
         PIMAGE_NT_HEADERS NTHeader = (PIMAGE_NT_HEADERS)((DWORD_PTR)Module + DOSHeader->e_lfanew);
 
         Textsegment.first = size_t(Module) + NTHeader->OptionalHeader.BaseOfCode;
         Textsegment.second = Textsegment.first + NTHeader->OptionalHeader.SizeOfCode;
+        Textsegment.second -= Textsegment.second % SI.dwPageSize;
 
         Datasegment.first = Textsegment.second;
         Datasegment.second = Datasegment.first + NTHeader->OptionalHeader.SizeOfInitializedData;
+        Datasegment.second -= Datasegment.second % SI.dwPageSize;
     #else
         Textsegment.first = *(size_t *)dlopen(NULL, RTLD_LAZY);
         Textsegment.second = size_t(&_etext);
