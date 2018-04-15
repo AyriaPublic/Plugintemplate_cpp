@@ -21,17 +21,17 @@ namespace Hooking
     struct Stomphook
     {
         std::function<Signature> Function;
-        uint8_t Savedtext[16]{};
+        uint8_t Savedtext[14]{};
         void *Savedlocation;
         void *Savedtarget;
 
         void Remove()
         {
-            auto Protection = Memprotect::Unprotectrange(Savedlocation, 16);
+            auto Protection = Memprotect::Unprotectrange(Savedlocation, 14);
             {
-                std::memcpy(Savedlocation, Savedtext, 16);
+                std::memcpy(Savedlocation, Savedtext, 14);
             }
-            Memprotect::Protectrange(Savedlocation, 16, Protection);
+            Memprotect::Protectrange(Savedlocation, 14, Protection);
         }
         void Reinstall() { Install(Savedlocation, Savedtarget); }
         static Stomphook Install(void *Location, void *Target, bool Followjumps = true)
@@ -39,41 +39,61 @@ namespace Hooking
             uint8_t *Address = (uint8_t *)Location;
             Stomphook<Signature> Localhook;
 
-            /*
-                TODO(Convery):
-                Disassemble the first bytes and check for jumps.
-                Then follow them so we don't overwrite hooks.
-            */
+            // Check the first byte and increment the address.
+            while (Followjumps)
+            {
+                switch (*(uint8_t *)Address)
+                {
+                    case 0xE9:
+                    {
+                        Address += sizeof(uint8_t);
+                        Address += *(uint32_t *)Address;
+                        Address += sizeof(uint32_t);
+                        break;
+                    }
+                    case 0xFF:
+                    {
+                        if (*(uint16_t *)Address == 0x25FF)
+                        {
+                            Address += sizeof(uint16_t);
+                            Address += *(uint32_t *)Address;
+                            Address += sizeof(uint32_t);
+                            Address = (uint8_t *)(*(size_t *)(Address));
+                            break;
+                        }
+                        Followjumps = false;
+                        break;
+                    }
+
+                    /*
+                        TODO(Convery):
+                        Add more cases.
+                    */
+
+                    default: Followjumps = false;
+                }
+            }
 
             // Save the current information for hook removal.
-            std::memcpy(Localhook.Savedtext, Address, 16);
+            std::memcpy(Localhook.Savedtext, Address, 14);
             Localhook.Function = *(Signature *)Address;
             Localhook.Savedlocation = Address;
             Localhook.Savedtarget = Target;
 
             // Write the opcodes.
-            auto Protection = Memprotect::Unprotectrange(Address, 16);
+            auto Protection = Memprotect::Unprotectrange(Address, 14);
             {
-                std::string Opcodes;
-
-                // PUSH EAX/RAX
-                Opcodes.append("\x50", 1);
-                // QWORD modifier
-                if constexpr(sizeof(void *) == 8) Opcodes.append("\x48", 1);
-                // MOV EAX/RAX
-                Opcodes.append("\xB8", 1);
-                // Address to jump to.
-                Opcodes.append((char *)&Target, sizeof(void *));
-                // QWORD modifier
-                if constexpr(sizeof(void *) == 8) Opcodes.append("\x48", 1);
-                // XCHG EAX/RAX, [ESP/RSP]
-                Opcodes.append("\x87\x04\x24", 3);
-                // RET
-                Opcodes.append("\xC3", 1);
-
-                std::memcpy(Address, Opcodes.data(), Opcodes.size());
+                #if defined ENVIRONMENT64
+                std::memcpy(Address, "\xFF\x25", 2);
+                std::memcpy(Address + 2, "\x00\x00\x00\x00", 4);
+                std::memcpy(Address + 6, &Target, sizeof(void *));
+                #else
+                std::memcpy(Address, "\xE9", 1);
+                Target = (uint8_t *)((size_t)Target - (size_t)Address - 5);
+                std::memcpy(Address + 1, &Target, sizeof(void *));
+                #endif
             }
-            Memprotect::Protectrange(Address, 16, Protection);
+            Memprotect::Protectrange(Address, 14, Protection);
 
             return Localhook;
         }
