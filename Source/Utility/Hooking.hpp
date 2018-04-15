@@ -83,7 +83,7 @@ namespace Hooking
             // Write the opcodes.
             auto Protection = Memprotect::Unprotectrange(Address, 14);
             {
-                #if defined ENVIRONMENT64
+                #if defined(ENVIRONMENT64)
                 std::memcpy(Address, "\xFF\x25", 2);
                 std::memcpy(Address + 2, "\x00\x00\x00\x00", 4);
                 std::memcpy(Address + 6, &Target, sizeof(void *));
