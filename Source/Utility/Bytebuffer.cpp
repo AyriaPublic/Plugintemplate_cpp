@@ -344,18 +344,18 @@ template <> bool Bytebuffer::Write(const Type Buffer, bool Typechecked)     \
     return Rawwrite(sizeof(Buffer), &Buffer);                               \
 }                                                                           \
 
-SINGLE_TEMPLATE(bool, BB_BOOL);
-SINGLE_TEMPLATE(char, BB_SINT8);
-SINGLE_TEMPLATE(int8_t, BB_SINT8);
-SINGLE_TEMPLATE(uint8_t, BB_UINT8);
-SINGLE_TEMPLATE(int16_t, BB_SINT16);
-SINGLE_TEMPLATE(uint16_t, BB_UINT16);
-SINGLE_TEMPLATE(int32_t, BB_SINT32);
-SINGLE_TEMPLATE(uint32_t, BB_UINT32);
-SINGLE_TEMPLATE(int64_t, BB_SINT64);
-SINGLE_TEMPLATE(uint64_t, BB_UINT64);
-SINGLE_TEMPLATE(float, BB_FLOAT32);
-SINGLE_TEMPLATE(double, BB_FLOAT64);
+SINGLE_TEMPLATE(bool, BB_BOOL)
+SINGLE_TEMPLATE(char, BB_SINT8)
+SINGLE_TEMPLATE(int8_t, BB_SINT8)
+SINGLE_TEMPLATE(uint8_t, BB_UINT8)
+SINGLE_TEMPLATE(int16_t, BB_SINT16)
+SINGLE_TEMPLATE(uint16_t, BB_UINT16)
+SINGLE_TEMPLATE(int32_t, BB_SINT32)
+SINGLE_TEMPLATE(uint32_t, BB_UINT32)
+SINGLE_TEMPLATE(int64_t, BB_SINT64)
+SINGLE_TEMPLATE(uint64_t, BB_UINT64)
+SINGLE_TEMPLATE(float, BB_FLOAT32)
+SINGLE_TEMPLATE(double, BB_FLOAT64)
 
 template <> bool Bytebuffer::Read(std::string &Buffer, bool Typechecked)
 {
@@ -463,22 +463,22 @@ template <> bool Bytebuffer::Writearray(std::vector<Type> Data)             \
     return true;                                                            \
 }                                                                           \
 
-MULTI_TEMPLATE(bool, BB_BOOL);
-MULTI_TEMPLATE(char, BB_SINT8);
-MULTI_TEMPLATE(int8_t, BB_SINT8);
-MULTI_TEMPLATE(uint8_t, BB_UINT8);
-MULTI_TEMPLATE(int16_t, BB_SINT16);
-MULTI_TEMPLATE(uint16_t, BB_UINT16);
-MULTI_TEMPLATE(int32_t, BB_SINT32);
-MULTI_TEMPLATE(uint32_t, BB_UINT32);
-MULTI_TEMPLATE(int64_t, BB_SINT64);
-MULTI_TEMPLATE(uint64_t, BB_UINT64);
-MULTI_TEMPLATE(float, BB_FLOAT32);
+MULTI_TEMPLATE(bool, BB_BOOL)
+MULTI_TEMPLATE(char, BB_SINT8)
+MULTI_TEMPLATE(int8_t, BB_SINT8)
+MULTI_TEMPLATE(uint8_t, BB_UINT8)
+MULTI_TEMPLATE(int16_t, BB_SINT16)
+MULTI_TEMPLATE(uint16_t, BB_UINT16)
+MULTI_TEMPLATE(int32_t, BB_SINT32)
+MULTI_TEMPLATE(uint32_t, BB_UINT32)
+MULTI_TEMPLATE(int64_t, BB_SINT64)
+MULTI_TEMPLATE(uint64_t, BB_UINT64)
+MULTI_TEMPLATE(float, BB_FLOAT32)
 MULTI_TEMPLATE(double, BB_FLOAT64);
 
-MULTI_TEMPLATE(std::string, BB_STRING_ASCII);
-MULTI_TEMPLATE(std::wstring, BB_STRING_WIDE);
-MULTI_TEMPLATE(std::vector<uint8_t>, BB_BLOB);
+MULTI_TEMPLATE(std::string, BB_STRING_ASCII)
+MULTI_TEMPLATE(std::wstring, BB_STRING_WIDE)
+MULTI_TEMPLATE(std::vector<uint8_t>, BB_BLOB)
 
 #pragma endregion
 
@@ -490,22 +490,22 @@ template <> Bytebuffer &Bytebuffer::operator += (const Type &Right) noexcept    
 template <> Bytebuffer &Bytebuffer::operator << (const Type &Right) noexcept    \
 { Write(Right); return *this; }                                                 \
 
-DIRECT_TEMPLATE(bool);
-DIRECT_TEMPLATE(char);
-DIRECT_TEMPLATE(int8_t);
-DIRECT_TEMPLATE(uint8_t);
-DIRECT_TEMPLATE(int16_t);
-DIRECT_TEMPLATE(uint16_t);
-DIRECT_TEMPLATE(int32_t);
-DIRECT_TEMPLATE(uint32_t);
-DIRECT_TEMPLATE(int64_t);
-DIRECT_TEMPLATE(uint64_t);
-DIRECT_TEMPLATE(float);
-DIRECT_TEMPLATE(double);
+DIRECT_TEMPLATE(bool)
+DIRECT_TEMPLATE(char)
+DIRECT_TEMPLATE(int8_t)
+DIRECT_TEMPLATE(uint8_t)
+DIRECT_TEMPLATE(int16_t)
+DIRECT_TEMPLATE(uint16_t)
+DIRECT_TEMPLATE(int32_t)
+DIRECT_TEMPLATE(uint32_t)
+DIRECT_TEMPLATE(int64_t)
+DIRECT_TEMPLATE(uint64_t)
+DIRECT_TEMPLATE(float)
+DIRECT_TEMPLATE(double)
 
-DIRECT_TEMPLATE(std::string);
-DIRECT_TEMPLATE(std::wstring);
-DIRECT_TEMPLATE(std::vector<uint8_t>);
+DIRECT_TEMPLATE(std::string)
+DIRECT_TEMPLATE(std::wstring)
+DIRECT_TEMPLATE(std::vector<uint8_t>)
 
 template <> Bytebuffer &Bytebuffer::operator += (const char *Right) noexcept
 { Write(std::string(Right)); return *this; }
