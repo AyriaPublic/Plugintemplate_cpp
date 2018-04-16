@@ -25,9 +25,13 @@
 #if defined(_WIN32)
     #define likely(x)       x
     #define unlikely(x)     x
+    #define ainline         __forceinline
+    #define ninline         __declspec(noinline)
 #else
     #define likely(x)       __builtin_expect(!!(x), 1)
     #define unlikely(x)     __builtin_expect(!!(x), 0)
+    #define ainline         inline __attribute__((__always_inline__))
+    #define ninline         __attribute__((__noinline__))
 #endif
 
 // Pattern-scanning.
