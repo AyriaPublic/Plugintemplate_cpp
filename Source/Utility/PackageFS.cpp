@@ -5768,7 +5768,7 @@ namespace Package
     }
 
     // Perform file IO.
-    void Deletefile(std::string_view Filename)
+    void Deletefile(std::string Filename)
     {
         if (!Fileexists(Filename)) return;
         if (!Internal::Archive) return;
@@ -5780,7 +5780,7 @@ namespace Package
 
             for (auto &Item : Filelist)
             {
-                if (0 != std::strcmp(Item.c_str(), Filename.data()))
+                if (0 != std::strcmp(Item.c_str(), Filename.c_str()))
                 {
                     Newarchive->writestr(Item, Internal::Archive->read(Item));
                 }
@@ -5794,7 +5794,7 @@ namespace Package
         }
         Internal::Threadguard.unlock();
     }
-    std::string Readfile(std::string_view Filename)
+    std::string Readfile(std::string Filename)
     {
         std::string Result{};
         Internal::Openarchive();
@@ -5802,16 +5802,16 @@ namespace Package
 
         Internal::Threadguard.lock();
         {
-            if (Internal::Archive->has_file(Filename.data()))
+            if (Internal::Archive->has_file(Filename))
             {
-                Result = Internal::Archive->read(Filename.data());
+                Result = Internal::Archive->read(Filename);
             }
         }
         Internal::Threadguard.unlock();
 
         return Result;
     }
-    void Writefile(std::string_view Filename, std::string Filebuffer)
+    void Writefile(std::string Filename, std::string Filebuffer)
     {
         Internal::Openarchive();
         Deletefile(Filename);
@@ -5820,14 +5820,14 @@ namespace Package
 
         Internal::Threadguard.lock();
         {
-            Internal::Archive->writestr(Filename.data(), Filebuffer);
+            Internal::Archive->writestr(Filename, Filebuffer);
             Internal::Savearchive();
         }
         Internal::Threadguard.unlock();
     }
 
     // Get file-information.
-    std::vector<std::string> Findfiles(std::string_view Criteria)
+    std::vector<std::string> Findfiles(std::string Criteria)
     {
         std::vector<std::string> Result{};
         Internal::Openarchive();
@@ -5838,34 +5838,34 @@ namespace Package
         {
             auto Filelist = Internal::Archive->namelist();
             for (auto &Item : Filelist)
-                if (std::strstr(Item.c_str(), Criteria.data()))
+                if (std::strstr(Item.c_str(), Criteria.c_str()))
                     Result.push_back(Item);
         }
         Internal::Threadguard.unlock();
 
         return Result;
     }
-    uint64_t Filetimestamp(std::string_view Filename)
+    uint64_t Filetimestamp(std::string Filename)
     {
         Internal::Openarchive();
         if (!Internal::Archive) return {};
 
-        auto File = Internal::Archive->getinfo(Filename.data());
+        auto File = Internal::Archive->getinfo(Filename);
         return File.timestamp;
     }
-    bool Fileexists(std::string_view Filename)
+    bool Fileexists(std::string Filename)
     {
         Internal::Openarchive();
         if (!Internal::Archive) return false;
 
-        return Internal::Archive->has_file(Filename.data());
+        return Internal::Archive->has_file(Filename);
     }
-    size_t Filesize(std::string_view Filename)
+    size_t Filesize(std::string Filename)
     {
         Internal::Openarchive();
         if (!Internal::Archive) return {};
 
-        auto File = Internal::Archive->getinfo(Filename.data());
+        auto File = Internal::Archive->getinfo(Filename);
         return File.file_size;
     }
 }

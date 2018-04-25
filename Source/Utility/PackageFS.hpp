@@ -12,13 +12,13 @@
 namespace Package
 {
     // Perform file IO.
-    void Deletefile(std::string_view Filename);
-    std::string Readfile(std::string_view Filename);
-    void Writefile(std::string_view Filename, std::string Filebuffer);
+    void Deletefile(std::string Filename);
+    std::string Readfile(std::string Filename);
+    void Writefile(std::string Filename, std::string Filebuffer);
 
     // Get file-information.
-    std::vector<std::string> Findfiles(std::string_view Criteria);
-    uint64_t Filetimestamp(std::string_view Filename);
-    bool Fileexists(std::string_view Filename);
-    size_t Filesize(std::string_view Filename);
+    std::vector<std::string> Findfiles(std::string Criteria);
+    uint64_t Filetimestamp(std::string Filename);
+    bool Fileexists(std::string Filename);
+    size_t Filesize(std::string Filename);
 }
