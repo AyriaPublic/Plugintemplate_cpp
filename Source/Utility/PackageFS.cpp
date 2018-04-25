@@ -5742,12 +5742,7 @@ namespace Package
 
         void Savearchive()
         {
-            static uint64_t Timestamp = 0;
-            if (time(NULL) - Timestamp > 5000)
-            {
-                if(Archive) Archive->save("./Plugins/" MODULENAME "." MODULEEXTENSION);
-                Timestamp = time(NULL);
-            }
+            if(Archive) Archive->save("./Plugins/" MODULENAME "." MODULEEXTENSION);
         }
         void Openarchive()
         {
@@ -5773,41 +5768,35 @@ namespace Package
         if (!Fileexists(Filename)) return;
         if (!Internal::Archive) return;
 
-        Internal::Threadguard.lock();
+        std::lock_guard<std::mutex> Lock(Internal::Threadguard);
+        auto Newarchive = new miniz_cpp::zip_file();
+        auto Filelist = Internal::Archive->namelist();
+
+        for (auto &Item : Filelist)
         {
-            auto Newarchive = new miniz_cpp::zip_file();
-            auto Filelist = Internal::Archive->namelist();
-
-            for (auto &Item : Filelist)
+            if (0 != std::strcmp(Item.c_str(), Filename.c_str()))
             {
-                if (0 != std::strcmp(Item.c_str(), Filename.c_str()))
-                {
-                    Newarchive->writestr(Item, Internal::Archive->read(Item));
-                }
+                Newarchive->writestr(Item, Internal::Archive->read(Item));
             }
-
-            std::vector<uint8_t> Buffer;
-            Newarchive->save(Buffer);
-
-            Internal::Archive->load(Buffer);
-            Internal::Savearchive();
         }
-        Internal::Threadguard.unlock();
+
+        std::vector<uint8_t> Buffer;
+        Newarchive->save(Buffer);
+
+        Internal::Archive->load(Buffer);
+        Internal::Savearchive();
     }
     std::string Readfile(std::string Filename)
     {
         std::string Result{};
         Internal::Openarchive();
         if (!Internal::Archive) return {};
+        std::lock_guard<std::mutex> Lock(Internal::Threadguard);
 
-        Internal::Threadguard.lock();
+        if (Internal::Archive->has_file(Filename))
         {
-            if (Internal::Archive->has_file(Filename))
-            {
-                Result = Internal::Archive->read(Filename);
-            }
+            Result = Internal::Archive->read(Filename);
         }
-        Internal::Threadguard.unlock();
 
         return Result;
     }
@@ -5817,13 +5806,10 @@ namespace Package
         Deletefile(Filename);
 
         if (!Internal::Archive) return;
+        std::lock_guard<std::mutex> Lock(Internal::Threadguard);
 
-        Internal::Threadguard.lock();
-        {
-            Internal::Archive->writestr(Filename, Filebuffer);
-            Internal::Savearchive();
-        }
-        Internal::Threadguard.unlock();
+        Internal::Archive->writestr(Filename, Filebuffer);
+        Internal::Savearchive();
     }
 
     // Get file-information.
@@ -5833,15 +5819,11 @@ namespace Package
         Internal::Openarchive();
 
         if (!Internal::Archive) return {};
+        std::lock_guard<std::mutex> Lock(Internal::Threadguard);
 
-        Internal::Threadguard.lock();
-        {
-            auto Filelist = Internal::Archive->namelist();
-            for (auto &Item : Filelist)
-                if (std::strstr(Item.c_str(), Criteria.c_str()))
-                    Result.push_back(Item);
-        }
-        Internal::Threadguard.unlock();
+        for (const auto &Item : Internal::Archive->namelist())
+            if (std::strstr(Item.c_str(), Criteria.c_str()))
+                Result.push_back(Item);
 
         return Result;
     }
@@ -5849,23 +5831,21 @@ namespace Package
     {
         Internal::Openarchive();
         if (!Internal::Archive) return {};
-
-        auto File = Internal::Archive->getinfo(Filename);
-        return File.timestamp;
+        std::lock_guard<std::mutex> Lock(Internal::Threadguard);
+        return Internal::Archive->getinfo(Filename).timestamp;
     }
     bool Fileexists(std::string Filename)
     {
         Internal::Openarchive();
-        if (!Internal::Archive) return false;
-
+        if (!Internal::Archive) return {};
+        std::lock_guard<std::mutex> Lock(Internal::Threadguard);
         return Internal::Archive->has_file(Filename);
     }
     size_t Filesize(std::string Filename)
     {
         Internal::Openarchive();
         if (!Internal::Archive) return {};
-
-        auto File = Internal::Archive->getinfo(Filename);
-        return File.file_size;
+        std::lock_guard<std::mutex> Lock(Internal::Threadguard);
+        return Internal::Archive->getinfo(Filename).file_size;
     }
 }
