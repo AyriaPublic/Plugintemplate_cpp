@@ -94,4 +94,36 @@ namespace Base64
 
         return Input.size();
     }
+
+    // RFC7515 compatibility.
+    inline std::string toURL(std::string Input)
+    {
+        while (Input.back() == '=')
+            Input.pop_back();
+
+        for (auto &Item : Input)
+        {
+            if (Item == '+') Item = '-';
+            if (Item == '/') Item = '_';
+        }
+
+
+        return Input;
+    }
+    inline std::string fromURL(std::string Input)
+    {
+        for (auto &Item : Input)
+        {
+            if (Item == '-') Item = '+';
+            if (Item == '_') Item = '/';
+        }
+
+        switch (Input.size() % 4)
+        {
+            case 2: Input += "=="; break;
+            case 1: Input += "="; break;
+        }
+
+        return Input;
+    }
 }
