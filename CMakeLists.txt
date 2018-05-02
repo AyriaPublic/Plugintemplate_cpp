@@ -9,6 +9,31 @@ enable_language(ASM_MASM)
 set(EXECUTABLE_OUTPUT_PATH ${Plugintemplate_cpp_SOURCE_DIR}/Bin)
 set(LIBRARY_OUTPUT_PATH ${Plugintemplate_cpp_SOURCE_DIR}/Bin)
 
+# Separate release and debugbuilds output and dependencies.
+mark_as_advanced(CMAKE_IMPORT_LIBRARY_SUFFIX CMAKE_DEBUG_POSTFIX)
+set(CMAKE_DEBUG_POSTFIX "d")
+
+# Platform libraries to be linked.
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+	set(CORE_LIBS ${CORELIBS} dl pthread)
+else()
+	set(CORE_LIBS ${CORE_LIBS})
+endif()
+
+# Extra flags for compiling and linking.
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+    if(${CMAKE_SIZEOF_VOID_P} EQUAL 4)
+		set(EXTRA_CMPFLAGS ${EXTRA_CMPFLAGS} "-m32")
+		set(EXTRA_LNKFLAGS ${EXTRA_LNKFLAGS} "-m32 -static-libgcc -static-libstdc++")
+	else()
+		set(EXTRA_CMPFLAGS ${EXTRA_CMPFLAGS} "-m64")
+		set(EXTRA_LNKFLAGS ${EXTRA_LNKFLAGS} "-m64 -static-libgcc -static-libstdc++")
+    endif()
+else()
+	set(EXTRA_CMPFLAGS ${EXTRA_CMPFLAGS} "")
+	set(EXTRA_LNKFLAGS ${EXTRA_LNKFLAGS} "")
+endif()
+
 # Set warningflags per compiler.
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     if (CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
@@ -21,47 +46,34 @@ else()
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG} -g")
 endif()
 
-# Separate release and debugbuilds output and dependencies.
-mark_as_advanced(CMAKE_IMPORT_LIBRARY_SUFFIX CMAKE_DEBUG_POSTFIX)
-set(CMAKE_DEBUG_POSTFIX "d")
-
-# Just pull all the files from /Source
-file(GLOB_RECURSE SOURCES "Source/*.cpp")
-file(GLOB_RECURSE ASSEMBLY "Source/*.asm")
-
-# Build the requested version without the 'lib' prefix.
-if(${CMAKE_SIZEOF_VOID_P} EQUAL 4)
-    add_library(Plugintemplate SHARED ${SOURCES})
-    set_target_properties(Plugintemplate PROPERTIES PREFIX "")
-    set_target_properties(Plugintemplate PROPERTIES SUFFIX ".ayria32")
-else()
-    add_library(Plugintemplate SHARED ${SOURCES} ${ASSEMBLY})
-    set_target_properties(Plugintemplate PROPERTIES PREFIX "")
-    set_target_properties(Plugintemplate PROPERTIES SUFFIX ".ayria64")
-endif()
-
-# Differentiate between x64 and x86 builds.
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-    if(${CMAKE_SIZEOF_VOID_P} EQUAL 4)
-        set_target_properties(Plugintemplate PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32 -static-libgcc -static-libstdc++")
-    else()
-        set_target_properties(Plugintemplate PROPERTIES COMPILE_FLAGS "-m64" LINK_FLAGS "-m64 -static-libgcc -static-libstdc++")
-    endif()
-endif()
-
-# Library dependencies for the platforms.
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-    target_link_libraries(Plugintemplate dl pthread)
-else()
-endif()
-
-# Use static VC runtimes when releasing on Windows.
+# Enforce static VC runtimes when building for Windows.
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     foreach(flag_var
-            CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
-            CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO)
+			CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
+            CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE 
+			CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO
+			CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
         if(${flag_var} MATCHES "/MD")
             string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
         endif()
     endforeach()
+endif()
+
+# Third-party libraries, prefer find_library() and find_path().
+set(MODULE_INCS ${MODULE_INCS} )
+set(MODULE_LIBS ${MODULE_LIBS} )
+include_directories(${MODULE_INCS})
+
+# Just pull all the files from /Source
+file(GLOB_RECURSE SOURCES "Source/*.cpp")
+file(GLOB_RECURSE ASSEMBLY "Source/*.asm")
+add_library(Plugintemplate SHARED ${SOURCES} ${ASSEMBLY})
+set_target_properties(Plugintemplate PROPERTIES PREFIX "")
+target_link_libraries(Plugintemplate ${CORE_LIBS} ${MODULE_LIBS})
+
+# Use the AYRIA filextension.
+if(${CMAKE_SIZEOF_VOID_P} EQUAL 4)
+    set_target_properties(Plugintemplate PROPERTIES SUFFIX ".ayria32")
+else()
+    set_target_properties(Plugintemplate PROPERTIES SUFFIX ".ayria64")
 endif()
